@@ -36,12 +36,13 @@ public abstract class Scorer {
 		if (cheatRandomOnDataPercent) {
 			double start = random.nextDouble();
 			double end = (start + percentOfTestsToUseEachRun);
-			if (start < end) {
+			if (end < 1) {
 				return totalSetOfTests.subList((int) (start * totalSetOfTests.size()),
 						(int) (end * totalSetOfTests.size()));
 			} else {
 				int index1 = (int) (start * totalSetOfTests.size());
 				int index2 = (int) (end % 1 * totalSetOfTests.size());
+				
 				cases = totalSetOfTests.subList(0, index2);
 				cases.addAll(totalSetOfTests.subList(index1, totalSetOfTests.size() - 1));
 				return cases;

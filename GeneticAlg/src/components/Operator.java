@@ -63,4 +63,14 @@ public class Operator {
 		return null;
 	}
 
+	public static String setup(int operator, String var, String val1, String val2) {
+		if(ADD ==operator||Operator.SUB ==operator||Operator.DIVIDE ==operator||Operator.MULTIPLY ==operator){
+			return var+"="+val1+getOperator(operator)+val2+";";
+		}
+		if(GREATER == operator || LESSER ==operator|| EQUAL ==operator){
+			return "if("+val1+getOperator(operator)+val2+")\n"+var+"=1;\nelse\n"+var+"=-1;";
+		}
+		return var+"="+getOperator(operator)+" "+val1+", "+val2+";";
+	}
+
 }

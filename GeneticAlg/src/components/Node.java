@@ -32,6 +32,7 @@ public class Node extends Point {
 
 	@Override
 	public String toString() {
-		return var + "= " + Operator.getOperator(operator) + " " + val1 + ", " + val2;
+		return Operator.setup(operator,var,val1,val2);
+	//	return var + "= " + Operator.getOperator(operator) + " " + val1 + ", " + val2;
 	}
 }

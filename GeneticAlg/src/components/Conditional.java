@@ -41,7 +41,7 @@ public class Conditional extends Point {
 	}
 	@Override
 	public String toString() {
-		String ret = "IF " + variable + " IS " + !NOT + " THEN: " +points.size();
+		String ret = "if " + variable + " IS " + !NOT + " THEN: " +points.size();
 		StringBuilder s = new StringBuilder();
 		s.append(ret+System.lineSeparator());
 		for (Point p : points) {
