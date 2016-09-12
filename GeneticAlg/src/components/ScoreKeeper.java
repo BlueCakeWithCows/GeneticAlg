@@ -6,33 +6,22 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class ScoreKeeper {
-
-	public List<TestCase> cases;
-	public double percentToUse;
-	public SecureRandom random;
+public class ScoreKeeper extends Scorer {
 
 	public ScoreKeeper(List<TestCase> cases, double testDataToUse, SecureRandom r) {
-		this.cases = cases;
-		percentToUse = testDataToUse;
-		this.random = r;
+		super(cases, testDataToUse, r);
 	}
+
+	public ScoreKeeper() {
+		
+	}
+	
 
 	public double scale = 10000d;
 	public double errorMargin = .001d;
 
-	public List<TestCase> getThisRoundTest() {
-		if (percentToUse == 1)
-			return cases;
-		List<TestCase> c = new ArrayList<TestCase>();
-		for (int i = 0; i < cases.size() * percentToUse; i++) {
-			c.add(cases.get(random.nextInt(cases.size())));
-		}
-		return c;
-
-	}
-
-	public List<Tree> score(List<Tree> children) {
+	@Override
+	protected List<ScoredTree> score(List<Tree> children, List<TestCase> cases) {
 		List<ScoredTree> sTree = new ArrayList<ScoredTree>();
 		for (Tree tree : children) {
 			tree.failedTests = 0;
@@ -40,8 +29,6 @@ public class ScoreKeeper {
 			sTree.add(new ScoredTree(tree));
 
 		}
-		List<TestCase> cases = getThisRoundTest();
-
 		for (TestCase c : cases) {
 
 			double[] highest = new double[c.out.length], lowest = new double[c.out.length];
@@ -99,40 +86,10 @@ public class ScoreKeeper {
 			}
 		}
 
-		try {
-			Collections.sort(sTree, new Comparator<ScoredTree>() {
-				@Override
-				public int compare(ScoredTree o2, ScoredTree o1) {
-					int res = Integer.compare(o2.tree.failedTests, o1.tree.failedTests);
-					if (res == 0)
-						res = Double.compare(o1.runningScore, o2.runningScore);
-					if (res == 0)
-						res = Integer.compare(o2.tree.getSize(), o1.tree.getSize());
-					return res;
-				}
-			});
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-		}
-
-		List<Tree> newList = new ArrayList<Tree>();
 		for (ScoredTree tweat : sTree) {
 			tweat.tree.score = tweat.runningScore * 100d / scale / cases.size();
-			newList.add(tweat.tree);
 		}
-		return newList;
+		return sTree;
 	}
 
-	private class ScoredTree {
-		public ScoredTree(Tree tree) {
-			this.tree = tree;
-		}
-
-		public boolean[] normaled;
-
-		Tree tree;
-		double[] tempScores;
-		double runningScore = 0;
-	}
 }

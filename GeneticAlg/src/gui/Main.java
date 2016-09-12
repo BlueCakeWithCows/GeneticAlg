@@ -70,7 +70,7 @@ public class Main extends JFrame {
 	 * Launch the application.
 	 */
 
-	private boolean stopRequested = true;
+	private boolean stopRequested = false;
 	private JTextField TestDataToUse;
 	private JLabel label_8;
 
@@ -149,13 +149,8 @@ public class Main extends JFrame {
 
 				prepSettings();
 				CaseReader reader = new CaseReader(trainingFile);
-				SecureRandom random = new SecureRandom();
-				random.setSeed(settings.getSeed());
 				try {
-					manager = new Manager(random, settings.getMutationChance(),
-							reader.getTestCases(), settings.getPopulation(), settings.getTopPercent(),
-							settings.getMinInitPop(), settings.getMaxInitPop(), settings.getMaxTreeSize(),
-							settings.geTestDataToUse());
+					manager = new Manager(settings, reader.getTestCases());
 					manager.generatePopulation();
 					manager.scorePopulation();
 					displayScore(5);
@@ -252,7 +247,7 @@ public class Main extends JFrame {
 
 					@Override
 					public void run() {
-						stopRequested = false;
+
 						RunsField.setEnabled(false);
 						UntilField.setEnabled(false);
 						boolean runs = false;
@@ -261,14 +256,15 @@ public class Main extends JFrame {
 							Integer.parseInt(RunsField.getText());
 							runs = true;
 						} catch (Exception e) {
-
 						}
 						try {
 							untilPercent = Double.parseDouble(UntilField.getText());
 						} catch (Exception e) {
 
 						}
+						stopRequested = false;
 						while (!stopRequested) {
+
 							if (runs) {
 								int i = Integer.parseInt(RunsField.getText());
 								if (i < 1)
@@ -281,6 +277,7 @@ public class Main extends JFrame {
 							generationCounter.setText("Generation " + manager.getGeneration());
 							displayScore(5);
 						}
+
 						stop();
 					}
 
@@ -353,8 +350,8 @@ public class Main extends JFrame {
 		label_8 = new JLabel("Test Data Percent");
 		label_8.setBounds(91, 353, 146, 20);
 		contentPane.add(label_8);
-		
-		File defT = new File(files.getAbsolutePath() +"/default.txt");
+
+		File defT = new File(files.getAbsolutePath() + "/default.txt");
 		try {
 			settings = new Settings(SimpleSaveLoad.load(defT));
 		} catch (IOException e2) {
@@ -375,7 +372,7 @@ public class Main extends JFrame {
 		InitialDepthMaxField.setText(String.valueOf(settings.getMaxInitPop()));
 		MaxTreeSizeField.setText(String.valueOf(settings.getMaxTreeSize()));
 		TrainingFileField.setText(String.valueOf(settings.getURL()));
-		TestDataToUse.setText(String.valueOf(settings.geTestDataToUse()));
+		TestDataToUse.setText(String.valueOf(settings.getTestDataToUse()));
 		this.setFile(String.valueOf(settings.getURL()));
 	}
 

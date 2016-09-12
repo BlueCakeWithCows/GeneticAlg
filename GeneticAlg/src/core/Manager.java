@@ -11,13 +11,10 @@ import components.TestCase;
 import components.Tree;
 
 public class Manager {
-	private int generation;
-	private SecureRandom random;
-	private Mutator mutator;
-	private ScoreKeeper scorer;
-	private List<Tree> children;
-	private int inputSpace, outputSpace;
-	public int population;
+
+	public int getRunningTime() {
+		return (int) this.totalRunTime;
+	}
 
 	public int getGeneration() {
 		return generation;
@@ -33,25 +30,6 @@ public class Manager {
 		outputSpace = outSize;
 		this.population = population;
 		this.topPercent = topPercent;
-	}
-
-	// Not yet implemented
-	private int maxSize;
-
-	public Manager(SecureRandom secureRandom, double mutationChance, List<TestCase> testCases,
-			int population, double topPercent, int minInitPop, int maxInitPop, int maxLength, double TestDataToUse) {
-		this.random = secureRandom;
-		this.mutator = new Mutator(random, mutationChance);
-		this.scorer = new ScoreKeeper(testCases,TestDataToUse,random);
-		children = new ArrayList<Tree>();
-		inputSpace = testCases.get(0).input.length;
-		outputSpace = testCases.get(0).out.length;
-		this.population = population;
-		this.topPercent = topPercent;
-		this.maxInitPop = maxInitPop;
-		this.minInitPop = minInitPop;
-		this.maxSize = maxLength;
-		
 	}
 
 	public List<Tree> getBest(int number) {
@@ -71,13 +49,18 @@ public class Manager {
 			scored = true;
 			scorePopulation();
 		}
+
+		long time = System.currentTimeMillis();
+
 		shavePopulationToTopAndMutate();
 		scorePopulation();
+
+		this.totalRunTime += (System.currentTimeMillis() - time) / 1000d;
 	}
 
 	public void scorePopulation() {
 		scored = true;
-		children = scorer.score(children);
+		children = scorer.parallelScore(children, numberOfThreads);
 	}
 
 	double topPercent;
@@ -89,7 +72,7 @@ public class Manager {
 		while (children.size() < population) {
 			i = i % lastIndex;
 			Tree tree = mutator.mutateTree(children.get(i));
-			if(tree.getSize() < this.maxSize){
+			if (tree.getSize() < this.maxSize) {
 				children.add(tree);
 			}
 		}
@@ -114,4 +97,52 @@ public class Manager {
 		}
 		return tree;
 	}
+
+	public Manager(Settings settings, List<TestCase> cases) {
+		this.applySettings(settings);
+		children = new ArrayList<Tree>();
+		this.inputSpace = cases.get(0).input.length;
+		this.outputSpace = cases.get(0).out.length;
+		this.scorer.setTestSuite(cases);
+	}
+
+	private long seed;
+
+	private void applySettings(Settings settings) {
+		if (random != null || this.seed != settings.getSeed()) {
+			seed = settings.getSeed();
+			random = new SecureRandom();
+			random.setSeed(seed);
+		}
+
+		if (mutator == null)
+			mutator = new Mutator();
+		mutator.setMutationChance(settings.getMutationChance());
+		mutator.setRandom(random);
+
+		if (scorer == null)
+			scorer = new ScoreKeeper();
+		scorer.setRandom(random);
+		scorer.setQuickRandom(settings.getQuickRandomTestSelection());
+		scorer.setUsableTestSuitePercent(settings.getTestDataToUse());
+
+		population = settings.getPopulation();
+		maxSize = settings.getMaxTreeSize();
+		maxInitPop = settings.getMaxInitPop();
+		minInitPop = settings.getMinInitPop();
+		topPercent = settings.getTopPercent();
+		numberOfThreads = settings.getNumberOfThreads();
+	}
+
+	private int generation;
+	private SecureRandom random;
+	private Mutator mutator;
+	private ScoreKeeper scorer;
+	private List<Tree> children;
+	private int inputSpace, outputSpace;
+	private int population;
+	private int maxSize;
+	private int numberOfThreads;
+
+	private double totalRunTime;
 }

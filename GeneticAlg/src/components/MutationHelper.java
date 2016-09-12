@@ -3,13 +3,14 @@ package components;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MutationHelper {
-	private SecureRandom random;
+	private Random random;
 	private List<String> vars;
 	private List<String> values;
 
-	public MutationHelper(SecureRandom random2, ArrayList<String> arrayList, ArrayList<String> arrayList2) {
+	public MutationHelper(Random random2, ArrayList<String> arrayList, ArrayList<String> arrayList2) {
 		this.random = random2;
 		this.vars = arrayList;
 		this.values = arrayList2;

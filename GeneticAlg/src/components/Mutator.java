@@ -3,23 +3,33 @@ package components;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 
 public class Mutator {
-	private SecureRandom random;
+	private Random random;
 	private double mutChance;
 	private MutationHelper helper;
 
 	public Mutator(SecureRandom random, double mutChance) {
 		this.random = random;
 		this.mutChance = mutChance;
-		
+
 	}
 
+	public void setMutationChance(double d){
+		this.mutChance = d;
+	}
+	public void setRandom(Random random){
+		this.random = random;
+	}
+	
+	public Mutator() {
+	}
 
 	public Tree mutateTree(Tree oldTree) {
-		helper = new MutationHelper(random, oldTree.getDefaultVariables(),oldTree.getDefaultNames());
+		helper = new MutationHelper(random, oldTree.getDefaultVariables(), oldTree.getDefaultNames());
 
 		Tree tree = new Tree(oldTree.inputSize, oldTree.outputSize);
 
@@ -74,7 +84,7 @@ public class Mutator {
 			if (m())
 				toKill.add(counter);
 			counter++;
-			
+
 		}
 		for (int i = 0; i < toAdd.size(); i++) {
 			Integer val = toAdd.pop();
@@ -88,10 +98,10 @@ public class Mutator {
 			}
 			copy.add(val, point);
 		}
-		for(int i = 0; i <toKill.size(); i ++){
-			int lol = (int)toKill.pop();
-			Point p =copy.remove(lol);
-			if(p instanceof Conditional){
+		for (int i = 0; i < toKill.size(); i++) {
+			int lol = (int) toKill.pop();
+			Point p = copy.remove(lol);
+			if (p instanceof Conditional) {
 				List<Point> pList = ((Conditional) p).points;
 				copy.addAll(lol, pList);
 			}
