@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import components.CaseReader;
-import components.Tree;
+import components.mathsolver.Tree;
 import core.Manager;
 import core.Settings;
 import core.SimpleSaveLoad;

@@ -11,7 +11,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 
 import components.CaseReader;
-import components.Tree;
+import components.mathsolver.Tree;
 import core.Manager;
 import core.Settings;
 import core.SimpleSaveLoad;

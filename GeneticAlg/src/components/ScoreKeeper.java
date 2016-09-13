@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import components.mathsolver.Tree;
+
 public class ScoreKeeper extends Scorer {
 
 	public ScoreKeeper(List<TestCase> cases, double testDataToUse, SecureRandom r) {

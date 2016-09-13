@@ -1,4 +1,4 @@
-package components;
+package components.mathsolver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,8 +14,8 @@ public class Tree {
 	private HashMap<String, Double> variables;
 	private HashMap<String, Double> values;
 	private HashMap<String, Double> constants;
-	int outputSize;
-	int inputSize;
+	public int outputSize;
+	public int inputSize;
 	public Double[] outputs;
 
 	public Tree(int inp, int out) {

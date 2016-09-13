@@ -8,7 +8,7 @@ import components.MutationHelper;
 import components.Mutator;
 import components.ScoreKeeper;
 import components.TestCase;
-import components.Tree;
+import components.mathsolver.Tree;
 
 public class Manager {
 

@@ -1,4 +1,4 @@
-package components;
+package components.mathsolver;
 
 public class Operator {
 	public static final int OR = 0, ADD = 1, SUB = 2, MULTIPLY = 3, DIVIDE = 4, GREATER = 5, LESSER = 6, EQUAL = 7,

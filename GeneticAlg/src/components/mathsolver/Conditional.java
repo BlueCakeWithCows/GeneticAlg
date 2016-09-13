@@ -1,4 +1,4 @@
-package components;
+package components.mathsolver;
 
 import java.util.ArrayList;
 import java.util.List;

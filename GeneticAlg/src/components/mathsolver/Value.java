@@ -1,4 +1,4 @@
-package components;
+package components.mathsolver;
 
 public class Value {
 	public String name;

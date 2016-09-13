@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import components.mathsolver.Tree;
+
 public abstract class Scorer {
 
 	private List<TestCase> totalSetOfTests;

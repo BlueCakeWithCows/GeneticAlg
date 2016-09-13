@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import components.mathsolver.Conditional;
+import components.mathsolver.Node;
+import components.mathsolver.Operator;
+import components.mathsolver.Point;
+import components.mathsolver.Tree;
+
 public class MutationHelper<T> {
 
 	private Random random;

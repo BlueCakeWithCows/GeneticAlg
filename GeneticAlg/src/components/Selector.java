@@ -1,6 +1,6 @@
 package components;
 
-public class Selector<T> {
+public class Selector {
 	
 	private int elite;
 	

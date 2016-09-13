@@ -1,4 +1,4 @@
-package components;
+package components.mathsolver;
 
 public abstract class Point {
 

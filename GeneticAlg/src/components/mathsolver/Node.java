@@ -1,4 +1,4 @@
-package components;
+package components.mathsolver;
 
 public class Node extends Point {
 	public int operator;
