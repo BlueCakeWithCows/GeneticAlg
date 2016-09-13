@@ -15,7 +15,7 @@ public class Mutator {
 	public Mutator(SecureRandom random, double mutChance) {
 		this.random = random;
 		this.mutChance = mutChance;
-
+		
 	}
 
 	public void setMutationChance(double d){

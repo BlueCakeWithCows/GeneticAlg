@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MutationHelper {
+public class MutationHelper<T> {
+
 	private Random random;
 	private List<String> vars;
 	private List<String> values;
