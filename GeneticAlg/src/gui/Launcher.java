@@ -27,6 +27,7 @@ import java.awt.Label;
 import java.awt.Button;
 
 public class Launcher extends JFrame {
+	
 
 	private JPanel contentPane;
 	private JTextField currentSettingsFileTextField;
