@@ -23,7 +23,7 @@ public class MutationHelper<T> {
 		this.values = arrayList2;
 	}
 
-	public MutationHelper(SecureRandom random2, Tree tree) {
+	public MutationHelper(Random random2, Tree tree) {
 		this(random2, tree.getDefaultVariables(),tree.getDefaultNames());
 	}
 
@@ -53,7 +53,7 @@ public class MutationHelper<T> {
 		if (i < vars.size()) {
 			return vars.get(i);
 		} else {
-			String newVar = "var" + random.nextInt();
+			String newVar = "var" + random.nextInt(300);
 			addVar(newVar);
 			return newVar;
 		}

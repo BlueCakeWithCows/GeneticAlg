@@ -86,6 +86,7 @@ public class Tree {
 		if (point instanceof Conditional) {
 			if (index + 1 != points.size()) {
 				Point p = points.get(index + 1);
+				
 				points.remove(index + 1);
 				((Conditional) point).points.add(p);
 			}
@@ -133,4 +134,17 @@ public class Tree {
 	public void setPoints(List<Point> points2) {
 		this.points = points2;
 	}
+
+	public Point getPoint(int i) {
+		if(points.size() > i){
+			return points.get(i);
+		}
+		return null;
+	}
+
+	public int simpleSize() {
+		return points.size();
+	}
+
+
 }
