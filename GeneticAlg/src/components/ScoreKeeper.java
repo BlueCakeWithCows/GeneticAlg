@@ -20,7 +20,7 @@ public class ScoreKeeper extends Scorer {
 	
 
 	public double scale = 10000d;
-	public double errorMargin = .001d;
+	public double errorMargin = 1d;
 
 	@Override
 	protected List<ScoredTree> score(List<Tree> children, List<TestCase> cases) {

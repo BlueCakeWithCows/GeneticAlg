@@ -10,7 +10,7 @@ public class Tree {
 	public double score;
 	public int failedTests;
 	public int totalTests;
-	private List<Point> points;
+	private List<Node> points;
 	private HashMap<String, Double> variables;
 	private HashMap<String, Double> values;
 	private HashMap<String, Double> constants;
@@ -19,12 +19,17 @@ public class Tree {
 	public Double[] outputs;
 
 	public Tree(int inp, int out) {
-		points = new ArrayList<Point>();
+		points = new ArrayList<Node>();
 		outputSize = out;
 		this.inputSize = inp;
 		variables = new HashMap<String, Double>();
 		values = new HashMap<String, Double>();
 		constants = new HashMap<String, Double>();
+		constants.put("c0", 0d) ;
+		constants.put("c1", 1d) ;
+		constants.put("c2", 2d) ;
+
+
 	}
 
 	public Double[] execute(double[] inputs) {
@@ -52,8 +57,16 @@ public class Tree {
 	}
 
 	public void simulate(Tree tree) {
-		for (Point p : points) {
-			p.compute(tree);
+		int currentLine = 0;
+		try {
+			for (; currentLine < points.size();) {
+				
+				points.get(currentLine).compute(tree);
+				currentLine += points.get(currentLine).getLineJump();
+				
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+
 		}
 	}
 
@@ -73,7 +86,7 @@ public class Tree {
 		return list;
 	}
 
-	public void addPoint(Point point) {
+	public void addPoint(Node point) {
 		this.addPoint(point, points.size());
 	}
 
@@ -81,16 +94,8 @@ public class Tree {
 		return points.size();
 	}
 
-	public void addPoint(Point point, int index) {
+	public void addPoint(Node point, int index) {
 		points.add(index, point);
-		if (point instanceof Conditional) {
-			if (index + 1 != points.size()) {
-				Point p = points.get(index + 1);
-				
-				points.remove(index + 1);
-				((Conditional) point).points.add(p);
-			}
-		}
 	}
 
 	public void setVariable(String var, Double doOperation) {
@@ -108,7 +113,7 @@ public class Tree {
 		return "in" + i;
 	}
 
-	public List<Point> getPoints() {
+	public List<Node> getPoints() {
 		return this.points;
 	}
 
@@ -117,7 +122,7 @@ public class Tree {
 		StringBuilder s = new StringBuilder();
 		s.append("Failed Tests: " + failedTests + " of " + totalTests + " ");
 		s.append("Score: " + score + System.lineSeparator());
-		for (Point p : points) {
+		for (Node p : points) {
 			s.append(p.toString() + System.lineSeparator());
 		}
 		return s.toString().trim();
@@ -125,18 +130,18 @@ public class Tree {
 
 	public int getSize() {
 		int total = 0;
-		for (Point p : points) {
+		for (Node p : points) {
 			total += p.getSize();
 		}
 		return total;
 	}
 
-	public void setPoints(List<Point> points2) {
+	public void setPoints(List<Node> points2) {
 		this.points = points2;
 	}
 
-	public Point getPoint(int i) {
-		if(points.size() > i){
+	public Node getPoint(int i) {
+		if (points.size() > i) {
 			return points.get(i);
 		}
 		return null;
@@ -145,6 +150,5 @@ public class Tree {
 	public int simpleSize() {
 		return points.size();
 	}
-
 
 }

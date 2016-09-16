@@ -5,12 +5,10 @@ import java.util.List;
 import java.util.Random;
 
 import components.mathsolver.Node;
-import components.mathsolver.Point;
 import components.mathsolver.Tree;
 
 public class Breeder {
 
-	private MutationHelper helper;
 	private Random rand;
 
 	public Breeder(Random random) {
@@ -35,36 +33,24 @@ public class Breeder {
 			for (int i = 0; i < maxLength; i++) {
 				int randomIndex = rand.nextInt(pairs);
 
-				Point p = breedingPair[randomIndex].getPoint(i);
+				Node p = breedingPair[randomIndex].getPoint(i);
 
 				if (p != null){
-					
-					if(p instanceof Node){
-						if(!helper.hasValue(((Node) p).val1)){
-							((Node) p).val1 = helper.getRandomValue();
-						
-						if(!helper.hasValue(((Node) p).val2)){
-							((Node) p).val2 = helper.getRandomValue();	
-													
-					}
-						
-						if(p instanceof Conditional){
-							if(!helper.hasValue(((Node) p).val1)){
-								((Node) p).val1 = helper.getRandomValue();
-							
-							if(!helper.hasValue(((Node) p).val2)){
-								((Node) p).val2 = helper.getRandomValue();	
-														
+					for(int index =0; index < p.values.length;index++ ){
+						if(!helper.hasValue(p.values[index])){
+							p.values[index] = helper.getRandomValue();
 						}
+					}
 					
-					
-					
+					for(int index =0; index < p.variables.length;index++ ){
+						if(!helper.hasVariable(p.variables[index])){
+							p.variables[index] = helper.getRandomVariable();
+						}
+					}	
 					
 					newTree.addPoint(p);
 				}
 			}
-
-			
 
 			newList.add(newTree);
 

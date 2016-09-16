@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Random;
 
 import components.mathsolver.Conditional;
-import components.mathsolver.Node;
+import components.mathsolver.Function;
 import components.mathsolver.Operator;
-import components.mathsolver.Point;
+import components.mathsolver.Node;
 import components.mathsolver.Tree;
 
 public class MutationHelper<T> {
@@ -27,13 +27,13 @@ public class MutationHelper<T> {
 		this(random2, tree.getDefaultVariables(),tree.getDefaultNames());
 	}
 
-	public Point getNewPoint() {
-		if (random.nextDouble() < .2) {
-			return new Conditional(this.getRandomValue(), random.nextBoolean());
-		} else {
-			return new Node(this.getRandomVariable(), this.getRandomOperator(), this.getRandomValue(),
+	public Node getNewPoint() {
+//		if (random.nextDouble() < .2) {
+//			return new Conditional(this.getRandomValue(), this.getRandomValue(),this.getRandomValue());
+//		} else {
+			return new Function(this.getRandomVariable(), this.getRandomOperator(), this.getRandomValue(),
 					this.getRandomValue());
-		}
+//		}
 	}
 
 	public int getRandomOperator() {
@@ -63,5 +63,13 @@ public class MutationHelper<T> {
 		if (!vars.contains(var)) {
 			vars.add(var);
 		}
+	}
+
+	public boolean hasVariable(String string) {
+		return vars.contains(string);
+	}
+
+	public boolean hasValue(String string) {
+		return (vars.contains(string) || values.contains(string));
 	}
 }

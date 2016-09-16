@@ -8,8 +8,8 @@ import java.util.Set;
 import java.util.Stack;
 
 import components.mathsolver.Conditional;
+import components.mathsolver.Function;
 import components.mathsolver.Node;
-import components.mathsolver.Point;
 import components.mathsolver.Tree;
 
 public class Mutator {
@@ -20,16 +20,17 @@ public class Mutator {
 	public Mutator(SecureRandom random, double mutChance) {
 		this.random = random;
 		this.mutChance = mutChance;
-		
+
 	}
 
-	public void setMutationChance(double d){
+	public void setMutationChance(double d) {
 		this.mutChance = d;
 	}
-	public void setRandom(Random random){
+
+	public void setRandom(Random random) {
 		this.random = random;
 	}
-	
+
 	public Mutator() {
 	}
 
@@ -38,7 +39,7 @@ public class Mutator {
 
 		Tree tree = new Tree(oldTree.inputSize, oldTree.outputSize);
 
-		List<Point> points = mutateList(oldTree.getPoints());
+		List<Node> points = mutateList(oldTree.getPoints());
 
 		tree.setPoints(points);
 
@@ -46,43 +47,35 @@ public class Mutator {
 
 	}
 
-	public Point mutatePoint(Point p) {
+	public Node mutatePoint(Node oPoint) {
+		Node newNode = null;
+		if (oPoint instanceof Function) {
+			newNode = new Function((Function) oPoint);
+			if (m())
+				((Function) newNode).operator = helper.getRandomOperator();
+		} else if (oPoint instanceof Conditional) {
+			newNode = new Conditional((Conditional) oPoint);
+		}
 
-		if (p instanceof Node) {
-			Node n = (Node) p;
-			Node newPoint = new Node(n);
+		for (int i = 0; i < newNode.values.length; i++) {
 			if (m())
-				newPoint.var = helper.getRandomVariable();
-			if (m())
-				newPoint.val1 = helper.getRandomValue();
-			if (m())
-				newPoint.val2 = helper.getRandomValue();
-			if (m())
-				newPoint.operator = helper.getRandomOperator();
-			helper.addVar(newPoint.var);
-			return newPoint;
+				newNode.values[i] = helper.getRandomValue();
 		}
-		if (p instanceof Conditional) {
-			Conditional nP = (Conditional) p;
-			Conditional n = new Conditional(nP);
+		for (int i = 0; i < newNode.variables.length; i++) {
 			if (m())
-				n.variable = helper.getRandomVariable();
-			if (m())
-				n.NOT = !n.NOT;
-			n.points = this.mutateList(n.points);
-			return n;
+				newNode.variables[i] = helper.getRandomVariable();
 		}
-		return null;
+		return newNode;
 	}
 
-	private List<Point> mutateList(List<Point> points) {
+	private List<Node> mutateList(List<Node> points) {
 
-		List<Point> copy = new ArrayList<Point>();
+		List<Node> copy = new ArrayList<Node>();
 		Stack<Integer> toAdd = new Stack<Integer>();
 		Stack<Integer> toKill = new Stack<Integer>();
 
 		int counter = 0;
-		for (Point p : points) {
+		for (Node p : points) {
 			copy.add(mutatePoint(p));
 			if (m())
 				toAdd.add(counter);
@@ -93,23 +86,12 @@ public class Mutator {
 		}
 		for (int i = 0; i < toAdd.size(); i++) {
 			Integer val = toAdd.pop();
-			Point point = helper.getNewPoint();
-			if (point instanceof Conditional) {
-				if (val < copy.size()) {
-					Point p = copy.get(val);
-					copy.remove(p);
-					((Conditional) point).points.add(p);
-				}
-			}
+			Node point = helper.getNewPoint();
 			copy.add(val, point);
 		}
 		for (int i = 0; i < toKill.size(); i++) {
 			int lol = (int) toKill.pop();
-			Point p = copy.remove(lol);
-			if (p instanceof Conditional) {
-				List<Point> pList = ((Conditional) p).points;
-				copy.addAll(lol, pList);
-			}
+			copy.remove(lol);
 		}
 		return copy;
 	}

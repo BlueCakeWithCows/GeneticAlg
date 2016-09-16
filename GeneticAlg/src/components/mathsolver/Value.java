@@ -17,7 +17,15 @@ public class Value {
 		return false;
 	}
 
-	public Double getDouble() {
+	public double getDouble() {
+		if (value == null)
+			return 0d;
 		return value;
+	}
+
+	public int getInt() {
+		if (value == null)
+			return 0;
+		return (int) Math.floor(value);
 	}
 }
