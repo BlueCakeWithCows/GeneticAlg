@@ -1,8 +1,6 @@
 package components.mathsolver;
 
 public class Operator {
-	public static final int OR = 0, ADD = 1, SUB = 2, MULTIPLY = 3, DIVIDE = 4, GREATER = 5, LESSER = 6, EQUAL = 7,
-			SET = 8;
 
 	public static Double doOperation(int operator, Value val1, Value val2) {
 		switch (operator) {
@@ -39,6 +37,21 @@ public class Operator {
 	public static final int getRange() {
 		return 9;
 	}
+
+	public static final int OR = 0, ADD = 1, SUB = 2, MULTIPLY = 3, DIVIDE = 4, GREATER = 5, LESSER = 6, EQUAL = 7,
+			SET = 8;
+
+	public static String[] symbols = { "||", "+", "-", "*", "/", ">", "<", "==", "SET" };
+
+	public static int getInt(String operator) {
+		for (int i = 0; i < symbols.length; i++) {
+			if (operator.contains(symbols[i])) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	public static String getOperator(int operator) {
 		switch (operator) {
 		case ADD:
@@ -64,13 +77,14 @@ public class Operator {
 	}
 
 	public static String setup(int operator, String var, String val1, String val2) {
-		if(ADD ==operator||Operator.SUB ==operator||Operator.DIVIDE ==operator||Operator.MULTIPLY ==operator){
-			return var+"="+val1+getOperator(operator)+val2+";";
+		if (ADD == operator || Operator.SUB == operator || Operator.DIVIDE == operator
+				|| Operator.MULTIPLY == operator) {
+			return var + "=" + val1 + getOperator(operator) + val2 + "";
 		}
-		if(GREATER == operator || LESSER ==operator|| EQUAL ==operator){
-			return "if("+val1+getOperator(operator)+val2+")\n"+var+"=1;\nelse\n"+var+"=-1;";
+		if (GREATER == operator || LESSER == operator || EQUAL == operator || OR == operator) {
+			return var + "=" + val1 + getOperator(operator) + val2;
 		}
-		return var+"="+getOperator(operator)+" "+val1+", "+val2+";";
+		return var + "=" + getOperator(operator) + " " + val1 + ", " + val2 + ";";
 	}
 
 }

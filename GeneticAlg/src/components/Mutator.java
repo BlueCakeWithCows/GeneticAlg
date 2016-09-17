@@ -34,6 +34,15 @@ public class Mutator {
 	public Mutator() {
 	}
 
+	public List<Tree> mutate(List<Tree> newList2) {
+		List<Tree> newList = new ArrayList<Tree>();
+		for (Tree tree : newList2) {
+			newList.add(mutateTree(tree));
+		}
+
+		return newList;
+	}
+
 	public Tree mutateTree(Tree oldTree) {
 		helper = new MutationHelper(random, oldTree.getDefaultVariables(), oldTree.getDefaultNames());
 

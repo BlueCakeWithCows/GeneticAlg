@@ -1,34 +1,30 @@
 package gui;
 
-import java.awt.EventQueue;
+import java.awt.Button;
+import java.awt.Label;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
 import components.CaseReader;
 import components.mathsolver.Tree;
 import core.Manager;
 import core.Settings;
 import core.SimpleSaveLoad;
 
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.awt.event.ActionEvent;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import java.awt.Label;
-import java.awt.Button;
-
-public class Launcher extends JFrame {
-
-	private JPanel contentPane;
+public class MainWindow extends JPanel{
+	
 	private JTextField currentSettingsFileTextField;
 	private JFileChooser chooser;
 	private File trainingFile;
@@ -47,38 +43,16 @@ public class Launcher extends JFrame {
 	private Button stopRunningButton;
 	private JButton selectTrainingFileButton;
 	public final int START_BUTTON_Y = 500;
-	/**
-	 * Launch the application.
-	 */
-
 	private boolean stopRequested = false;
 	private JTextField TestDataToUse;
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Launcher frame = new Launcher();
-					frame.copyFromSettings();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	
+	public MainWindow(){
+		this.setFocusCycleRoot(true);
+		this.setBorder(new EmptyBorder(5, 5, 5, 5));
+		this.setLayout(null);
 	}
-
-	/**
-	 * Create the frame.
-	 */
-	public Launcher() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 760, 650);
-		contentPane = new JPanel();
-		contentPane.setFocusCycleRoot(true);
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+	
+	public void init(){
 		JButton loadSettingsButton = new JButton("...");
 		loadSettingsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -98,19 +72,19 @@ public class Launcher extends JFrame {
 		});
 
 		loadSettingsButton.setBounds(332, 16, 24, 27);
-		contentPane.add(loadSettingsButton);
+		this.add(loadSettingsButton);
 
 		currentSettingsFileTextField = new JTextField();
 		currentSettingsFileTextField.setBounds(15, 16, 319, 27);
 		currentSettingsFileTextField.setColumns(10);
 		currentSettingsFileTextField.setEditable(false);
-		contentPane.add(currentSettingsFileTextField);
+		this.add(currentSettingsFileTextField);
 
 		TrainingFileField = new JTextField();
 		TrainingFileField.setBounds(15, 50, 319, 27);
 		TrainingFileField.setColumns(10);
 		TrainingFileField.setEditable(false);
-		contentPane.add(TrainingFileField);
+		this.add(TrainingFileField);
 		generateInitialPopulationButton = new JButton("Start");
 		generateInitialPopulationButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -129,7 +103,7 @@ public class Launcher extends JFrame {
 
 		});
 		generateInitialPopulationButton.setBounds(0, START_BUTTON_Y, 206, 29);
-		contentPane.add(generateInitialPopulationButton);
+		this.add(generateInitialPopulationButton);
 
 		saveSettingsToFileButton = new JButton("Save Settings");
 		saveSettingsToFileButton.addActionListener(new ActionListener() {
@@ -144,7 +118,7 @@ public class Launcher extends JFrame {
 		});
 		saveSettingsToFileButton.setBounds(0,
 				generateInitialPopulationButton.getHeight() + generateInitialPopulationButton.getY(), 206, 29);
-		contentPane.add(saveSettingsToFileButton);
+		this.add(saveSettingsToFileButton);
 
 		
 		generationDisplayTextArea = new JTextArea("hello");
@@ -152,11 +126,11 @@ public class Launcher extends JFrame {
 		JScrollPane generationDisplayTextAreaScrollPaneWrapper = new JScrollPane(generationDisplayTextArea);
 		generationDisplayTextAreaScrollPaneWrapper.setFocusTraversalKeysEnabled(false);
 		generationDisplayTextAreaScrollPaneWrapper.setBounds(424, 147, 297, 320);
-		contentPane.add(generationDisplayTextAreaScrollPaneWrapper);
+		this.add(generationDisplayTextAreaScrollPaneWrapper);
 
 		resultsLabelForTextArea = new Label("Time");
 		resultsLabelForTextArea.setBounds(424, 118, 82, 27);
-		contentPane.add(resultsLabelForTextArea);
+		this.add(resultsLabelForTextArea);
 
 		runGenerationsButton = new Button("Go");
 		runGenerationsButton.addActionListener(new ActionListener() {
@@ -200,29 +174,29 @@ public class Launcher extends JFrame {
 			}
 		});
 		runGenerationsButton.setBounds(415, 84, 91, 27);
-		contentPane.add(runGenerationsButton);
+		this.add(runGenerationsButton);
 
 		generationCounterLabel = new Label("Generation");
 		generationCounterLabel.setBounds(560, 117, 139, 27);
-		contentPane.add(generationCounterLabel);
+		this.add(generationCounterLabel);
 
 		numberOfRunsInputLabel = new Label("Number of Runs");
 		numberOfRunsInputLabel.setBounds(513, 16, 160, 27);
-		contentPane.add(numberOfRunsInputLabel);
+		this.add(numberOfRunsInputLabel);
 
 		untilAccuracyInputLabel = new Label("Until Accuracy (100 max)");
 		untilAccuracyInputLabel.setBounds(513, 47, 186, 27);
-		contentPane.add(untilAccuracyInputLabel);
+		this.add(untilAccuracyInputLabel);
 
 		UntilField = new JTextField();
 		UntilField.setColumns(10);
 		UntilField.setBounds(424, 48, 83, 26);
-		contentPane.add(UntilField);
+		this.add(UntilField);
 
 		RunsField = new JTextField();
 		RunsField.setColumns(10);
 		RunsField.setBounds(424, 16, 83, 26);
-		contentPane.add(RunsField);
+		this.add(RunsField);
 
 		stopRunningButton = new Button("Stop");
 		stopRunningButton.addActionListener(new ActionListener() {
@@ -231,7 +205,7 @@ public class Launcher extends JFrame {
 			}
 		});
 		stopRunningButton.setBounds(523, 84, 91, 27);
-		contentPane.add(stopRunningButton);
+		this.add(stopRunningButton);
 
 		selectTrainingFileButton = new JButton("...");
 		selectTrainingFileButton.addActionListener(new ActionListener() {
@@ -247,7 +221,7 @@ public class Launcher extends JFrame {
 		});
 		selectTrainingFileButton.setBounds((int) TrainingFileField.getBounds().getMaxX(),
 				(int) TrainingFileField.getBounds().getY(), 24, 27);
-		contentPane.add(selectTrainingFileButton);
+		this.add(selectTrainingFileButton);
 
 		chooser = new JFileChooser();
 		File files = new File(chooser.getCurrentDirectory().getPath() + "/_BlueGeneticProgramming");
@@ -260,9 +234,10 @@ public class Launcher extends JFrame {
 			setFile(settings.getURL());
 		} catch (IOException e2) {
 		}
-
+		this.copyFromSettings();
 	}
 
+	
 	public void setFile(String url) {
 		trainingFile = new File(url);
 	}
@@ -311,11 +286,11 @@ public class Launcher extends JFrame {
 				label.setBounds(iX + settingsBoxWidth + spacing, iY + i * (spacing + settingsBoxHeight),
 						settingsLabelWidth, settingsBoxHeight);
 				labels.add(label);
-				contentPane.add(label);
+				this.add(label);
 				JTextField field = new JTextField(settings.map.get(s));
 				field.setBounds(iX, iY + i * (spacing + settingsBoxHeight), settingsBoxWidth, settingsBoxHeight);
 				fields.add(field);
-				contentPane.add(field);
+				this.add(field);
 				i++;
 			}
 		}
@@ -326,11 +301,11 @@ public class Launcher extends JFrame {
 	public void cleanSettingsFields() {
 		if (settingsLabels != null)
 			for (Label l : settingsLabels) {
-				contentPane.remove(l);
+				this.remove(l);
 			}
 		if (settingsTextFields != null)
 			for (JTextField l : settingsTextFields) {
-				contentPane.remove(l);
+				this.remove(l);
 			}
 		settingsTextFields = new ArrayList<JTextField>();
 		settingsLabels = new ArrayList<Label>();

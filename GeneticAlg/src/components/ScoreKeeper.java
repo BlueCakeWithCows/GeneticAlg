@@ -15,12 +15,12 @@ public class ScoreKeeper extends Scorer {
 	}
 
 	public ScoreKeeper() {
-		
+
 	}
-	
 
 	public double scale = 10000d;
-	public double errorMargin = 1d;
+	public double errorMargin = 0d;
+	public double aboveThisNoScorePoints = 100;
 
 	@Override
 	protected List<ScoredTree> score(List<Tree> children, List<TestCase> cases) {
@@ -29,11 +29,10 @@ public class ScoreKeeper extends Scorer {
 			tree.failedTests = 0;
 			tree.totalTests = 0;
 			sTree.add(new ScoredTree(tree));
-
 		}
 		for (TestCase c : cases) {
 
-			double[] highest = new double[c.out.length], lowest = new double[c.out.length];
+			double highest = aboveThisNoScorePoints, lowest = 0;
 			for (ScoredTree tree : sTree) {
 
 				Double[] results = tree.tree.execute(c.input);
@@ -53,12 +52,12 @@ public class ScoreKeeper extends Scorer {
 					} else {
 						tree.normaled[i] = false;
 
+						// Difference between result and expected - Capping at
+						// 100 since I suspect
+						// The extreme highs are making bad results look better
 						tree.tempScores[i] = Math.abs(c.out[i] - results[i]);
-						if (tree.tempScores[i] > highest[i])
-							highest[i] = tree.tempScores[i];
-						if (tree.tempScores[i] < lowest[i]) {
-							lowest[i] = tree.tempScores[i];
-						}
+						if (tree.tempScores[i] > highest)
+							tree.tempScores[i] = highest;
 
 					}
 					tree.tree.totalTests++;
@@ -73,12 +72,11 @@ public class ScoreKeeper extends Scorer {
 			for (ScoredTree tree : sTree) {
 				for (int i = 0; i < c.out.length; i++) {
 					if (!tree.normaled[i])
-						if (lowest[i] + highest[i] == 0)
+						if (highest + lowest == 0)
 							tree.tempScores[i] = 0;
 						else {
 
-							double bottom = scale
-									- (tree.tempScores[i] - lowest[i]) / ((lowest[i] + highest[i]) / scale);
+							double bottom = scale - (tree.tempScores[i] - lowest) / ((lowest + highest) / scale);
 
 							tree.tempScores[i] = bottom;
 						}
@@ -92,6 +90,14 @@ public class ScoreKeeper extends Scorer {
 			tweat.tree.score = tweat.runningScore * 100d / scale / cases.size();
 		}
 		return sTree;
+	}
+
+	public void setNoPointMark(double d) {
+		this.aboveThisNoScorePoints = d;
+	}
+
+	public void setError(double errorMargin2) {
+		this.errorMargin = errorMargin2;
 	}
 
 }

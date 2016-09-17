@@ -3,11 +3,16 @@ package core;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import components.Breeder;
+import components.BreedingSummary;
 import components.MutationHelper;
 import components.Mutator;
 import components.ScoreKeeper;
+import components.Selector;
 import components.TestCase;
+import components.basic.BasicSelector;
 import components.mathsolver.Tree;
 
 public class Manager {
@@ -20,42 +25,37 @@ public class Manager {
 		return generation;
 	}
 
-	public Manager(SecureRandom random, double mutationChance, List<TestCase> cases, int inSize, int outSize,
-			int population, double topPercent) {
-		this.random = random;
-		this.mutator = new Mutator(random, mutationChance);
-		this.scorer = new ScoreKeeper(cases, 1d, random);
-		children = new ArrayList<Tree>();
-		inputSpace = inSize;
-		outputSpace = outSize;
-		this.population = population;
-		this.topPercent = topPercent;
-	}
-
-	public List<Tree> getBest(int number) {
-		return children.subList(0, number);
-
+	public List<Tree> getTop(int number) {
+		return children.subList(0, number - 1);
 	}
 
 	public Tree getBest() {
 		return children.get(0);
-
 	}
 
-	boolean scored = false;
-
 	public void doGeneration() {
-		if (!scored) {
-			scored = true;
-			scorePopulation();
-		}
-
 		long time = System.currentTimeMillis();
+		if (!scored)
+			scorePopulation();
+		Tree[][][] obs = (Tree[][][]) selector.selectBreedingPairs(children);
+		List<Tree> newList = breeder.simpleBreed(obs[0]);
+		newList.addAll(shaveExcess(obs[1]));
 
-		shavePopulationToTopAndMutate();
+		children.subList(elite, children.size()).clear();
+		newList = mutator.mutate(newList);
+		children.addAll(newList);
+
 		scorePopulation();
-
 		this.totalRunTime += (System.currentTimeMillis() - time) / 1000d;
+		generation++;
+	}
+
+	public List<Tree> shaveExcess(Tree[][] trees) {
+		List<Tree> newList = new ArrayList<Tree>(trees.length);
+		for (Tree[] t : trees) {
+			newList.add(t[0]);
+		}
+		return newList;
 	}
 
 	public void scorePopulation() {
@@ -109,12 +109,24 @@ public class Manager {
 	private long seed;
 
 	private void applySettings(Settings settings) {
-		if (random != null || this.seed != settings.getSeed()) {
+		if (random != null || this.seed != settings.getSeed()
+				|| ((random instanceof SecureRandom) != settings.getUseSecureRandom())) {
 			seed = settings.getSeed();
-			random = new SecureRandom();
+			if (settings.getUseSecureRandom())
+				random = new SecureRandom();
+			else
+				random = new Random();
 			random.setSeed(seed);
 		}
 
+		population = settings.getPopulation();
+		maxSize = settings.getMaxTreeSize();
+		maxInitPop = settings.getMaxInitPop();
+		minInitPop = settings.getMinInitPop();
+		topPercent = settings.getTopPercent();
+		numberOfThreads = settings.getNumberOfThreads();
+		elite = settings.getElite();
+		
 		if (mutator == null)
 			mutator = new Mutator();
 		mutator.setMutationChance(settings.getMutationChance());
@@ -125,24 +137,44 @@ public class Manager {
 		scorer.setRandom(random);
 		scorer.setQuickRandom(settings.getQuickRandomTestSelection());
 		scorer.setUsableTestSuitePercent(settings.getTestDataToUse());
+		scorer.setError(settings.getErrorMargin());
+		scorer.setNoPointMark(settings.getNoPointsForErrorAbove());
+		scorer.setUseFailedAsPrimary(settings.getUseFailedTestsPrimaryScoring());
+		
+		if (breedingSummary == null)
+			breedingSummary = new BreedingSummary();
+		breedingSummary.elite = settings.getElite();
+		breedingSummary.numberPerPairToSelect = settings.getNumberOfParents();
+		breedingSummary.percentMutateOnly = settings.getPercentToMutateOnly();
+		breedingSummary.percentMixBreed = settings.getSimpleMixBreedPercent();
+		breedingSummary.population = this.population;
+		breedingSummary.recalc();
 
-		population = settings.getPopulation();
-		maxSize = settings.getMaxTreeSize();
-		maxInitPop = settings.getMaxInitPop();
-		minInitPop = settings.getMinInitPop();
-		topPercent = settings.getTopPercent();
-		numberOfThreads = settings.getNumberOfThreads();
+		if (breeder == null)
+			breeder = new Breeder();
+		breeder.setRandom(random);
+		breeder.setBreedingSummary(breedingSummary);
+
+		if (selector == null)
+			selector = new BasicSelector();
+		selector.setRandom(random);
+		selector.setBreedingSummary(breedingSummary);
 	}
 
 	private int generation;
-	private SecureRandom random;
+	private boolean scored = false;
+
+	private Random random;
 	private Mutator mutator;
 	private ScoreKeeper scorer;
+	private Breeder breeder;
+	private BasicSelector selector;
+	private BreedingSummary breedingSummary;
 	private List<Tree> children;
 	private int inputSpace, outputSpace;
 	private int population;
 	private int maxSize;
 	private int numberOfThreads;
-
+	private int elite;
 	private double totalRunTime;
 }

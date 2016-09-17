@@ -34,4 +34,10 @@ public class Function extends Node {
 		return Operator.setup(operator,variables[0],values[0],values[1]);
 	//	return var + "= " + Operator.getOperator(operator) + " " + val1 + ", " + val2;
 	}
+	
+	@Override
+	public Node getCopy() {
+		Function c = new Function(this);
+		return c;
+	}
 }

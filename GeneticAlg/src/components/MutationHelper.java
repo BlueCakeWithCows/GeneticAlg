@@ -28,12 +28,12 @@ public class MutationHelper<T> {
 	}
 
 	public Node getNewPoint() {
-//		if (random.nextDouble() < .2) {
-//			return new Conditional(this.getRandomValue(), this.getRandomValue(),this.getRandomValue());
-//		} else {
+		if (random.nextDouble() < .2) {
+			return new Conditional(this.getRandomValue(), this.getRandomValue(),this.getRandomValue());
+		} else {
 			return new Function(this.getRandomVariable(), this.getRandomOperator(), this.getRandomValue(),
 					this.getRandomValue());
-//		}
+		}
 	}
 
 	public int getRandomOperator() {

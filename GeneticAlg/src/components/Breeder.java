@@ -10,13 +10,13 @@ import components.mathsolver.Tree;
 public class Breeder {
 
 	private Random rand;
+	private BreedingSummary summary;
 
-	public Breeder(Random random) {
-		rand = random;
+	public Breeder() {
 	}
 
-	public List<Tree> simpleBreed(BreedingSummary summary, Tree[][] breedingList) {
-		int pairs = summary.pairsToSelect;
+	public List<Tree> simpleBreed(Tree[][] breedingList) {
+		int pairs = summary.numberPerPairToSelect;
 		List<Tree> newList = new ArrayList<Tree>();
 
 		for (Tree[] breedingPair : breedingList) {
@@ -32,22 +32,22 @@ public class Breeder {
 			MutationHelper helper = new MutationHelper(rand, newTree);
 			for (int i = 0; i < maxLength; i++) {
 				int randomIndex = rand.nextInt(pairs);
-
 				Node p = breedingPair[randomIndex].getPoint(i);
 
-				if (p != null){
-					for(int index =0; index < p.values.length;index++ ){
-						if(!helper.hasValue(p.values[index])){
+				if (p != null) {
+					p = p.getCopy();
+					for (int index = 0; index < p.values.length; index++) {
+						if (!helper.hasValue(p.values[index])) {
 							p.values[index] = helper.getRandomValue();
 						}
 					}
-					
-					for(int index =0; index < p.variables.length;index++ ){
-						if(!helper.hasVariable(p.variables[index])){
+
+					for (int index = 0; index < p.variables.length; index++) {
+						if (!helper.hasVariable(p.variables[index])) {
 							p.variables[index] = helper.getRandomVariable();
 						}
-					}	
-					
+					}
+
 					newTree.addPoint(p);
 				}
 			}
@@ -55,8 +55,15 @@ public class Breeder {
 			newList.add(newTree);
 
 		}
-
 		return newList;
 
+	}
+
+	public void setRandom(Random random) {
+		this.rand = random;
+	}
+
+	public void setBreedingSummary(BreedingSummary random) {
+		this.summary = random;
 	}
 }

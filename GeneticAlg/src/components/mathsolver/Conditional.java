@@ -11,8 +11,7 @@ public class Conditional extends Node {
 
 	public Conditional(Conditional nP) {
 		super(0, 3);
-		this.variables = nP.variables;
-		this.values = nP.values;
+		this.copy(nP.variables, nP.values);
 	}
 
 	@Override
@@ -30,7 +29,7 @@ public class Conditional extends Node {
 
 	@Override
 	public String toString() {
-		String ret = "if (" + values[0] + " > " + values[1] + ") NEXT: " + values[2];
+		String ret = "IF " + values[0] + " > " + values[1] + " THEN " + values[2];
 		StringBuilder s = new StringBuilder();
 		s.append(ret + System.lineSeparator());
 		return s.toString().trim();
@@ -43,5 +42,11 @@ public class Conditional extends Node {
 		if (lineJump < 1)
 			return 1;
 		return lineJump;
+	}
+
+	@Override
+	public Node getCopy() {
+		Conditional c = new Conditional(this);
+		return c;
 	}
 }

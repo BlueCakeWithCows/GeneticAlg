@@ -6,11 +6,19 @@ import java.util.Random;
 public abstract class Selector {
 
 	protected Random random;
+	protected BreedingSummary summary;
 
-	public Selector(Random random) {
+	public Selector() {
+
+	}
+
+	public abstract Object[][][] selectBreedingPairs(List orderedList);
+
+	public void setRandom(Random random) {
 		this.random = random;
 	}
 
-	public abstract Object[][] selectBreedingPairs(List orderedList, BreedingSummary summary);
-
+	public void setBreedingSummary(BreedingSummary random) {
+		this.summary = random;
+	}
 }

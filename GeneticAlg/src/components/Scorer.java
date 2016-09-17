@@ -41,10 +41,10 @@ public abstract class Scorer {
 						(int) (end * totalSetOfTests.size()));
 			} else {
 				int index1 = (int) (start * totalSetOfTests.size());
-				int index2 = (int) (end % 1 * totalSetOfTests.size());
-				
+				int index2 = (int) ((end - 1) * totalSetOfTests.size());
+
 				cases = totalSetOfTests.subList(0, index2);
-				cases.addAll(totalSetOfTests.subList(index1, totalSetOfTests.size() - 1));
+				cases.addAll(totalSetOfTests.subList(index1, totalSetOfTests.size()));
 				return cases;
 			}
 		}
@@ -82,13 +82,18 @@ public abstract class Scorer {
 
 		ParallelScorer[] threads = new ParallelScorer[numberOfThreads];
 		int min = 0, max = 0;
-		for (int i = 0; i < numberOfThreads; i++) {
-			min = (children.size() - 1) / numberOfThreads * i;
-			max = (children.size() - 1) / numberOfThreads * (i + 1);
+		int delta = (children.size()) / numberOfThreads;
+		int i2 = 0;
+		for (; i2 < numberOfThreads - 1; i2++) {
+			max = min + delta;
 			List<Tree> subList = children.subList(min, max);
-			threads[i] = new ParallelScorer(subList, cases);
-			threads[i].start();
+			threads[i2] = new ParallelScorer(subList, cases);
+			threads[i2].start();
+			min += delta;
 		}
+		List<Tree> subList = children.subList(min, children.size());
+		threads[i2] = new ParallelScorer(subList, cases);
+		threads[i2].start();
 
 		List<ScoredTree> newList = new ArrayList<ScoredTree>();
 		for (int i = 0; i < numberOfThreads; i++) {
@@ -142,12 +147,21 @@ public abstract class Scorer {
 
 		@Override
 		public int compareTo(ScoredTree o) {
-			int res = Integer.compare(this.tree.failedTests, o.tree.failedTests);
+			int res = 0;
+			
+			if (useFailedAsPrimary)
+				res = Integer.compare(this.tree.failedTests, o.tree.failedTests);
 			if (res == 0)
 				res = Double.compare(o.runningScore, this.runningScore);
 			if (res == 0)
 				res = Integer.compare(this.tree.getSize(), o.tree.getSize());
 			return res;
 		}
+	}
+
+	boolean useFailedAsPrimary = false;
+
+	public void setUseFailedAsPrimary(boolean useFailedTestsPrimaryScoring) {
+		useFailedAsPrimary = useFailedTestsPrimaryScoring;
 	}
 }

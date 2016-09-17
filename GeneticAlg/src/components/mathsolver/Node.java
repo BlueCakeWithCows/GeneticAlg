@@ -29,4 +29,6 @@ public abstract class Node {
 			this.values[i] = values[i];
 		}
 	}
+
+	public abstract Node getCopy();
 }
