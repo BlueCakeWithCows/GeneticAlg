@@ -80,18 +80,25 @@ public abstract class Scorer {
 	public List<Tree> parallelScore(List<Tree> children, int numberOfThreads) {
 		List<TestCase> cases = this.getTestingSet();
 
+		List<Tree> needToBeScored = new ArrayList<Tree>();
+		for (Tree tree : children) {
+			if (!tree.scored)
+				needToBeScored.add(tree);
+			tree.scored = true;
+		}
+		children.removeAll(needToBeScored);
 		ParallelScorer[] threads = new ParallelScorer[numberOfThreads];
 		int min = 0, max = 0;
-		int delta = (children.size()) / numberOfThreads;
+		int delta = (needToBeScored.size()) / numberOfThreads;
 		int i2 = 0;
 		for (; i2 < numberOfThreads - 1; i2++) {
 			max = min + delta;
-			List<Tree> subList = children.subList(min, max);
+			List<Tree> subList = needToBeScored.subList(min, max);
 			threads[i2] = new ParallelScorer(subList, cases);
 			threads[i2].start();
 			min += delta;
 		}
-		List<Tree> subList = children.subList(min, children.size());
+		List<Tree> subList = needToBeScored.subList(min, needToBeScored.size());
 		threads[i2] = new ParallelScorer(subList, cases);
 		threads[i2].start();
 
@@ -105,11 +112,18 @@ public abstract class Scorer {
 				e.printStackTrace();
 			}
 		}
+		for (Tree child : children) {
+			ScoredTree sc =new ScoredTree(child);
+			sc.runningScore = child.score;
+			newList.add(sc);
+		}
+
 		sort(newList);
 		List<Tree> finalList = new ArrayList<Tree>();
 
 		for (ScoredTree tree : newList) {
 			finalList.add(tree.tree);
+			
 		}
 		return finalList;
 	}
@@ -148,7 +162,7 @@ public abstract class Scorer {
 		@Override
 		public int compareTo(ScoredTree o) {
 			int res = 0;
-			
+
 			if (useFailedAsPrimary)
 				res = Integer.compare(this.tree.failedTests, o.tree.failedTests);
 			if (res == 0)

@@ -34,7 +34,7 @@ public class ScoreKeeper extends Scorer {
 
 			double highest = aboveThisNoScorePoints, lowest = 0;
 			for (ScoredTree tree : sTree) {
-
+				
 				Double[] results = tree.tree.execute(c.input);
 				tree.tempScores = new double[c.out.length];
 				tree.normaled = new boolean[c.out.length];

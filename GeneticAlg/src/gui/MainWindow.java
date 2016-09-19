@@ -23,8 +23,8 @@ import core.Manager;
 import core.Settings;
 import core.SimpleSaveLoad;
 
-public class MainWindow extends JPanel{
-	
+public class MainWindow extends JPanel {
+
 	private JTextField currentSettingsFileTextField;
 	private JFileChooser chooser;
 	private File trainingFile;
@@ -45,14 +45,14 @@ public class MainWindow extends JPanel{
 	public final int START_BUTTON_Y = 500;
 	private boolean stopRequested = false;
 	private JTextField TestDataToUse;
-	
-	public MainWindow(){
+
+	public MainWindow() {
 		this.setFocusCycleRoot(true);
 		this.setBorder(new EmptyBorder(5, 5, 5, 5));
 		this.setLayout(null);
 	}
-	
-	public void init(){
+
+	public void init() {
 		JButton loadSettingsButton = new JButton("...");
 		loadSettingsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -120,7 +120,6 @@ public class MainWindow extends JPanel{
 				generateInitialPopulationButton.getHeight() + generateInitialPopulationButton.getY(), 206, 29);
 		this.add(saveSettingsToFileButton);
 
-		
 		generationDisplayTextArea = new JTextArea("hello");
 		generationDisplayTextArea.setFocusTraversalKeysEnabled(false);
 		JScrollPane generationDisplayTextAreaScrollPaneWrapper = new JScrollPane(generationDisplayTextArea);
@@ -140,6 +139,8 @@ public class MainWindow extends JPanel{
 					public void run() {
 						RunsField.setEnabled(false);
 						UntilField.setEnabled(false);
+						runGenerationsButton.setEnabled(false);
+
 						boolean runs = false;
 						double untilPercent = 101;
 						try {
@@ -153,24 +154,30 @@ public class MainWindow extends JPanel{
 
 						}
 						stopRequested = false;
-						while (!stopRequested) {
+						try {
+							while (!stopRequested) {
 
-							if (runs) {
-								int i = Integer.parseInt(RunsField.getText());
-								if (i < 1)
+								if (runs) {
+									int i = Integer.parseInt(RunsField.getText());
+									if (i < 1)
+										break;
+									RunsField.setText(String.valueOf((i - 1)));
+								}
+								if (manager.getBest().score >= untilPercent)
 									break;
-								RunsField.setText(String.valueOf((i - 1)));
+								manager.doGeneration();
+								displayScore(5);
 							}
-							if (manager.getBest().score >= untilPercent)
-								break;
-							manager.doGeneration();
-							displayScore(5);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-
-						stop();
+						runGenerationsButton.setEnabled(true);
+						RunsField.setEnabled(true);
+						UntilField.setEnabled(true);
 					}
+				}
 
-				}).start();
+				).start();
 			}
 		});
 		runGenerationsButton.setBounds(415, 84, 91, 27);
@@ -200,6 +207,7 @@ public class MainWindow extends JPanel{
 
 		stopRunningButton = new Button("Stop");
 		stopRunningButton.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 				stop();
 			}
@@ -237,16 +245,12 @@ public class MainWindow extends JPanel{
 		this.copyFromSettings();
 	}
 
-	
 	public void setFile(String url) {
 		trainingFile = new File(url);
 	}
 
 	private void stop() {
 		stopRequested = true;
-		runGenerationsButton.setEnabled(true);
-		RunsField.setEnabled(true);
-		UntilField.setEnabled(true);
 	}
 
 	public void displayScore(int number) {

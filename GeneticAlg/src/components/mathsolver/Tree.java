@@ -8,6 +8,7 @@ import java.util.TreeSet;
 
 public class Tree {
 	public double score;
+	public boolean scored;
 	public int failedTests;
 	public int totalTests;
 	private List<Node> points;
