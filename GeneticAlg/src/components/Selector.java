@@ -3,16 +3,14 @@ package components;
 import java.util.List;
 import java.util.Random;
 
-public abstract class Selector {
-
+public abstract class Selector<T> {
 	protected Random random;
 	protected BreedingSummary summary;
 
 	public Selector() {
-
 	}
 
-	public abstract Object[][][] selectBreedingPairs(List orderedList);
+	public abstract T[][][] selectBreedingPairs(List<T> orderedList);
 
 	public void setRandom(Random random) {
 		this.random = random;

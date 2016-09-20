@@ -26,10 +26,9 @@ public class Tree {
 		variables = new HashMap<String, Double>();
 		values = new HashMap<String, Double>();
 		constants = new HashMap<String, Double>();
-		constants.put("c0", 0d) ;
-		constants.put("c1", 1d) ;
-		constants.put("c2", 2d) ;
-
+		constants.put("c0", 0d);
+		constants.put("c1", 1d);
+		constants.put("c2", 2d);
 
 	}
 
@@ -57,14 +56,16 @@ public class Tree {
 		return "out" + i;
 	}
 
+	public Parent currentParent;
+
 	public void simulate(Tree tree) {
 		int currentLine = 0;
 		try {
 			for (; currentLine < points.size();) {
-				
-				points.get(currentLine).compute(tree);
-				currentLine += points.get(currentLine).getLineJump();
-				
+				int lineJump = points.get(currentLine).compute(currentLine, tree, null);
+				if (currentParent != null)
+					lineJump = currentParent.check(lineJump, currentLine, this);
+				currentLine += lineJump;
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
 
