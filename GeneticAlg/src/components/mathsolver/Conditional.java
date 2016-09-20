@@ -2,29 +2,8 @@ package components.mathsolver;
 
 public class Conditional extends Node {
 
-	public Conditional(String value0, String value1, String value2) {
-		super(0, 3);
-		this.values[0] = value0;
-		this.values[1] = value1;
-		this.values[2] = value2;
-	}
-
-	public Conditional(Conditional nP) {
-		super(0, 3);
-		this.copy(nP.variables, nP.values);
-	}
-
-	@Override
-	public void compute(Tree tree) {
-		Double v1 = tree.getValue(values[0]).getDouble();
-		Double v2 = tree.getValue(values[1]).getDouble();
-		if (v1 > v2)
-			lineJump = 1;
-		else {
-			lineJump = tree.getValue(values[2]).getInt();
-			if(lineJump<1 || lineJump>1000)
-				lineJump=1;
-		}
+	public Conditional() {
+		super(0, 1, 1);
 	}
 
 	@Override
@@ -35,18 +14,26 @@ public class Conditional extends Node {
 		return s.toString().trim();
 	}
 
-	int lineJump;
-
 	@Override
-	public int getLineJump() {
-		if (lineJump < 1)
-			return 1;
-		return lineJump;
+	public int compute(int currentLine, Tree tree, Parent parent) {
+
+		// Evaluates the function and if it returns false skips however many
+		// lines
+		boolean skip = !functions[0].compute(tree).getBoolean();
+
+		int numberOfLinesToSkip;
+		if (skip)
+			numberOfLinesToSkip = tree.getValue(values[0]).getInt();
+		else
+			numberOfLinesToSkip = 1;
+
+		return numberOfLinesToSkip;
 	}
 
 	@Override
 	public Node getCopy() {
-		Conditional c = new Conditional(this);
+		Conditional c = new Conditional();
+		c.copy(variables, values, functions);
 		return c;
 	}
 }

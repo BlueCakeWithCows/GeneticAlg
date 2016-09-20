@@ -3,32 +3,62 @@ package components.mathsolver;
 public abstract class Node {
 	public String[] values;
 	public String[] variables;
-	
-	
-	public Node(int variables, int values){
-		this.variables = new String[variables];
-		this.values = new String[values];
-	}
-	
-	public abstract void compute(Tree tree);
-	public int getSize() {
-		return 1;
+	public TrueFunction[] functions;
+	public Parent parent;
+
+	public Node() {
+
 	}
 
-
-	public int getLineJump() {
-		return 1;
+	public Node(int variables, int values, int functions) {
+		createBlankArrays(variables, values, functions);
 	}
 
-	public void copy(String[] variables, String[] values) {
-		for(int i = 0 ; i < this.variables.length; i ++){
-			this.variables[i] = variables[i];
-		}
-		
-		for(int i = 0 ; i < this.values.length; i ++){
-			this.values[i] = values[i];
-		}
-	}
+	public abstract int compute(int currentLine, Tree tree, Parent parent);
 
 	public abstract Node getCopy();
+
+	public void copy(String[] variables, String[] values, TrueFunction[] functions) {
+		int varLength = getRayLengthOrZero(variables);
+		int valLength = getRayLengthOrZero(values);
+		int functLength = getRayLengthOrZero(functions);
+		createBlankArrays(varLength, valLength, functLength);
+
+		for (int i = 0; i < varLength; i++) {
+			this.variables[i] = variables[i];
+		}
+
+		for (int i = 0; i < valLength; i++) {
+			this.values[i] = values[i];
+		}
+
+		for (int i = 0; i < functLength; i++) {
+			this.functions[i] = functions[i].getCopy();
+		}
+
+	}
+
+	private int getRayLengthOrZero(Object[] variables2) {
+		if (variables2 != null)
+			return variables2.length;
+		return 0;
+	}
+
+	public void createBlankArrays(Integer variables, Integer values, Integer functions) {
+		if (variables != null && variables > 0)
+			this.variables = new String[variables];
+		else
+			this.variables = null;
+
+		if (values != null && values > 0)
+			this.values = new String[values];
+		else
+			this.values = null;
+
+		if (functions != null && functions > 0)
+			this.functions = new TrueFunction[functions];
+		else
+			this.functions = null;
+	}
+
 }

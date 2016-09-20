@@ -99,8 +99,8 @@ public class Tree {
 		points.add(index, point);
 	}
 
-	public void setVariable(String var, Double doOperation) {
-		variables.put(var, doOperation);
+	public void setVariable(String var, Value value) {
+		variables.put(var, value);
 	}
 
 	public Value getValue(String val2) {
