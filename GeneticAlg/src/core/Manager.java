@@ -14,9 +14,13 @@ import components.Selector;
 import components.TestCase;
 import components.basic.BasicSelector;
 import components.basic.Tree;
+import components.math.ArithmaticOperators;
+import components.math.Operator;
 
 public class Manager {
 
+	
+	
 	public int getRunningTime() {
 		return (int) this.totalRunTime;
 	}
@@ -93,7 +97,7 @@ public class Manager {
 		MutationHelper helper = new MutationHelper(random, tree);
 		for (int i = 0; i < size; i++) {
 			int r = random.nextInt(tree.getPointSize() + 1);
-			tree.addPoint(helper.getNewPoint(), r);
+			tree.addPoint(helper.getNewNode(), r);
 		}
 		return tree;
 	}
@@ -127,10 +131,15 @@ public class Manager {
 		numberOfThreads = settings.getNumberOfThreads();
 		elite = settings.getElite();
 		
+		if(settings.getUseOperatorArithmatic)
+			operatorSet.addAll(ArithmaticOperators.getArithmaticOperators());
+		
+		
 		if (mutator == null)
 			mutator = new Mutator();
 		mutator.setMutationChance(settings.getMutationChance());
 		mutator.setRandom(random);
+		mutator.setOperatorSet(operatorSet);
 
 		if (scorer == null)
 			scorer = new ScoreKeeper();
@@ -153,12 +162,19 @@ public class Manager {
 		if (breeder == null)
 			breeder = new Breeder();
 		breeder.setRandom(random);
+		breeder.setOperatorSet(operatorSet);
 		breeder.setBreedingSummary(breedingSummary);
 
 		if (selector == null)
 			selector = new BasicSelector();
 		selector.setRandom(random);
 		selector.setBreedingSummary(breedingSummary);
+		
+		
+		if(operatorSet ==null)
+			operatorSet = new ArrayList<Operator>();
+		operatorSet.clear();
+		
 	}
 
 	private int generation;
@@ -170,6 +186,7 @@ public class Manager {
 	private Breeder breeder;
 	private BasicSelector selector;
 	private BreedingSummary breedingSummary;
+	private List<Operator> operatorSet;
 	private List<Tree> children;
 	private int inputSpace, outputSpace;
 	private int population;

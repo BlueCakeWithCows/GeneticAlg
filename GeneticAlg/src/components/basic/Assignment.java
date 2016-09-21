@@ -23,4 +23,9 @@ public class Assignment extends Node {
 
 		return 1;
 	}
+	
+	@Override
+	public Node getInstanceOf() {
+		return new Assignment();
+	}
 }

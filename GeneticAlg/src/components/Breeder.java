@@ -6,12 +6,14 @@ import java.util.Random;
 
 import components.basic.Node;
 import components.basic.Tree;
+import components.math.Operator;
 
 public class Breeder {
 
 	private Random rand;
 	private BreedingSummary summary;
-
+	private List<Operator> operatorSet;
+	
 	public Breeder() {
 	}
 
@@ -29,7 +31,7 @@ public class Breeder {
 			}
 
 			Tree newTree = new Tree(breedingPair[0].inputSize, breedingPair[0].outputSize);
-			MutationHelper helper = new MutationHelper(rand, newTree);
+			MutationHelper helper = new MutationHelper(rand, newTree, operatorSet);
 			for (int i = 0; i < maxLength; i++) {
 				int randomIndex = rand.nextInt(pairs);
 				Node p = breedingPair[randomIndex].getPoint(i);
@@ -57,6 +59,10 @@ public class Breeder {
 		}
 		return newList;
 
+	}
+	
+	public void setOperatorSet(List<Operator> lidy){
+		this.operatorSet = lidy;
 	}
 
 	public void setRandom(Random random) {

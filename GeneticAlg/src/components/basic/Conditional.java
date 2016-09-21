@@ -15,7 +15,7 @@ public class Conditional extends Node {
 	}
 
 	@Override
-	public int compute(int currentLine, Tree tree ) {
+	public int compute(int currentLine, Tree tree) {
 
 		// Evaluates the function and if it returns false skips however many
 		// lines
@@ -36,4 +36,10 @@ public class Conditional extends Node {
 		c.copy(variables, values, functions);
 		return c;
 	}
+
+	@Override
+	public Node getInstanceOf() {
+		return new Conditional();
+	}
+
 }

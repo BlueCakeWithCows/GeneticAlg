@@ -10,17 +10,22 @@ import java.util.Stack;
 import components.basic.Conditional;
 import components.basic.Node;
 import components.basic.Tree;
-import components.mathsolver.Function;
+import components.math.Operator;
 
 public class Mutator {
 	private Random random;
 	private double mutChance;
 	private MutationHelper helper;
-
+	private List<Operator> operators;
+	
 	public Mutator(SecureRandom random, double mutChance) {
 		this.random = random;
 		this.mutChance = mutChance;
 
+	}
+	
+	public void setOperatorSet(List<Operator> operators){
+		this.operators = operators;
 	}
 
 	public void setMutationChance(double d) {
@@ -44,7 +49,7 @@ public class Mutator {
 	}
 
 	public Tree mutateTree(Tree oldTree) {
-		helper = new MutationHelper(random, oldTree.getDefaultVariables(), oldTree.getDefaultNames());
+		helper = new MutationHelper(random, oldTree.getDefaultVariables(), oldTree.getDefaultNames(),operators);
 
 		Tree tree = new Tree(oldTree.inputSize, oldTree.outputSize);
 
@@ -57,13 +62,11 @@ public class Mutator {
 	}
 
 	public Node mutatePoint(Node oPoint) {
-		Node newNode = null;
-		if (oPoint instanceof Function) {
-			newNode = new Function((Function) oPoint);
+		Node newNode = oPoint.getCopy();
+
+		for (int i = 0; i < newNode.functions.length; i++) {
 			if (m())
-				((Function) newNode).operator = helper.getRandomOperator();
-		} else if (oPoint instanceof Conditional) {
-			newNode = new Conditional((Conditional) oPoint);
+				newNode.functions[i] = helper.getRandomFunction();
 		}
 
 		for (int i = 0; i < newNode.values.length; i++) {
@@ -95,7 +98,7 @@ public class Mutator {
 		}
 		for (int i = 0; i < toAdd.size(); i++) {
 			Integer val = toAdd.pop();
-			Node point = helper.getNewPoint();
+			Node point = helper.getNewNode();
 			copy.add(val, point);
 		}
 		for (int i = 0; i < toKill.size(); i++) {

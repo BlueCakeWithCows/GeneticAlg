@@ -1,15 +1,13 @@
 package components;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import components.basic.Conditional;
 import components.basic.Node;
 import components.basic.Tree;
 import components.math.Operator;
-import components.mathsolver.Function;
+import components.math.TrueFunction;
 
 public class MutationHelper<T> {
 
@@ -17,27 +15,46 @@ public class MutationHelper<T> {
 	private List<String> vars;
 	private List<String> values;
 
-	public MutationHelper(Random random2, ArrayList<String> arrayList, ArrayList<String> arrayList2) {
+	private List<Node> validNodes;
+	private List<Operator> validOperators;
+
+	public MutationHelper(Random random2, ArrayList<String> arrayList, ArrayList<String> arrayList2, List<Operator> operators) {
 		this.random = random2;
 		this.vars = arrayList;
 		this.values = arrayList2;
+		this.validOperators = operators;
 	}
 
-	public MutationHelper(Random random2, Tree tree) {
-		this(random2, tree.getDefaultVariables(),tree.getDefaultNames());
+	public MutationHelper(Random random2, Tree tree,List<Operator> operators) {
+		this(random2, tree.getDefaultVariables(), tree.getDefaultNames(),operators);
 	}
 
-	public Node getNewPoint() {
-		if (random.nextDouble() < .2) {
-			return new Conditional(this.getRandomValue(), this.getRandomValue(),this.getRandomValue());
-		} else {
-			return new Function(this.getRandomVariable(), this.getRandomOperator(), this.getRandomValue(),
-					this.getRandomValue());
+	public Node getNewNode() {
+		int index = random.nextInt(validNodes.size());
+		Node n = validNodes.get(index).getInstanceOf();
+		
+		for (int i = 0; i < n.values.length; i++) {
+			n.values[i] = this.getRandomValue();
 		}
+		for (int i = 0; i < n.variables.length; i++) {
+			n.variables[i] = this.getRandomVariable();
+		}
+		for (int i = 0; i < n.variables.length; i++) {
+			n.functions[i] = this.getRandomFunction();
+		}
+		return n;
 	}
 
-	public int getRandomOperator() {
-		return random.nextInt(Operator.getRange());
+	public TrueFunction getRandomFunction() {
+		TrueFunction n = new TrueFunction(this.getRandomOperator());
+		for (int i = 0; i < n.values.length; i++) {
+			n.values[i] = this.getRandomValue();
+		}
+		return n;
+	}
+
+	public Operator getRandomOperator() {
+		return validOperators.get(random.nextInt(validOperators.size()));
 	}
 
 	public String getRandomValue() {
@@ -45,7 +62,7 @@ public class MutationHelper<T> {
 		if (i < vars.size())
 			return vars.get(i);
 		else
-			return values.get(i-vars.size());
+			return values.get(i - vars.size());
 	}
 
 	public String getRandomVariable() {

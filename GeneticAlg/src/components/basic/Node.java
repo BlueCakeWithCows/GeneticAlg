@@ -16,11 +16,11 @@ public abstract class Node {
 		createBlankArrays(variables, values, functions);
 	}
 
-	public int execute(int currentLine, Tree tree, Parent parent){
+	public int execute(int currentLine, Tree tree, Parent parent) {
 		this.parent = parent;
 		return this.compute(currentLine, tree);
 	}
-	
+
 	public abstract int compute(int currentLine, Tree tree);
 
 	public abstract Node getCopy();
@@ -67,9 +67,11 @@ public abstract class Node {
 		else
 			this.functions = null;
 	}
-	
-	public Parent getParent(){
+
+	public Parent getParent() {
 		return parent;
 	}
+
+	public abstract Node getInstanceOf();
 
 }
