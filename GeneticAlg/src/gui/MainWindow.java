@@ -18,7 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import components.CaseReader;
-import components.mathsolver.Tree;
+import components.basic.Tree;
 import core.Manager;
 import core.Settings;
 import core.SimpleSaveLoad;

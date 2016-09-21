@@ -1,4 +1,4 @@
-package components.mathsolver;
+package components.basic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,15 +6,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import components.math.Value;
+
 public class Tree {
 	public double score;
 	public boolean scored;
 	public int failedTests;
 	public int totalTests;
 	private List<Node> points;
-	private HashMap<String, Double> variables;
-	private HashMap<String, Double> values;
-	private HashMap<String, Double> constants;
+	private HashMap<String, Value> variables;
+	private HashMap<String, Value> values;
+	private HashMap<String, Value> constants;
 	public int outputSize;
 	public int inputSize;
 	public Double[] outputs;
@@ -23,13 +25,9 @@ public class Tree {
 		points = new ArrayList<Node>();
 		outputSize = out;
 		this.inputSize = inp;
-		variables = new HashMap<String, Double>();
-		values = new HashMap<String, Double>();
-		constants = new HashMap<String, Double>();
-		constants.put("c0", 0d);
-		constants.put("c1", 1d);
-		constants.put("c2", 2d);
-
+		variables = new HashMap<String, Value>();
+		values = new HashMap<String, Value>();
+		constants = new HashMap<String, Value>();
 	}
 
 	public Double[] execute(double[] inputs) {
@@ -38,16 +36,15 @@ public class Tree {
 		outputs = new Double[outputSize];
 
 		for (int i = 0; i < inputs.length; i++)
-			values.put(formatInput(i), inputs[i]);
-		;
+			values.put(formatInput(i), new Value(inputs[i]));
 
 		for (int i = 0; i < outputs.length; i++)
-			variables.put(formatOut(i), outputs[i]);
+			variables.put(formatOut(i), new Value(outputs[i]));
 
 		values.putAll(constants);
 		simulate(this);
 		for (int i = 0; i < outputs.length; i++)
-			outputs[i] = variables.get(formatOut(i));
+			outputs[i] = variables.get(formatOut(i)).getDouble();
 
 		return outputs;
 	}
@@ -62,7 +59,7 @@ public class Tree {
 		int currentLine = 0;
 		try {
 			for (; currentLine < points.size();) {
-				int lineJump = points.get(currentLine).compute(currentLine, tree, null);
+				int lineJump = points.get(currentLine).execute(currentLine, tree, null);
 				if (currentParent != null)
 					lineJump = currentParent.check(lineJump, currentLine, this);
 				currentLine += lineJump;
@@ -106,9 +103,9 @@ public class Tree {
 
 	public Value getValue(String val2) {
 		if (values.containsKey(val2))
-			return new Value(values.get(val2));
+			return values.get(val2);
 		else
-			return new Value(variables.get(val2));
+			return variables.get(val2);
 	}
 
 	public String formatInput(int i) {
@@ -131,11 +128,7 @@ public class Tree {
 	}
 
 	public int getSize() {
-		int total = 0;
-		for (Node p : points) {
-			total += p.getSize();
-		}
-		return total;
+		return points.size();
 	}
 
 	public void setPoints(List<Node> points2) {

@@ -5,7 +5,6 @@ import java.util.Random;
 
 import components.BreedingSummary;
 import components.Selector;
-import components.mathsolver.Tree;
 
 public class BasicSelector extends Selector {
 

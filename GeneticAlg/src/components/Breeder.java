@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import components.mathsolver.Node;
-import components.mathsolver.Tree;
+import components.basic.Node;
+import components.basic.Tree;
 
 public class Breeder {
 

@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import components.mathsolver.Conditional;
+import components.basic.Conditional;
+import components.basic.Node;
+import components.basic.Tree;
+import components.math.Operator;
 import components.mathsolver.Function;
-import components.mathsolver.Operator;
-import components.mathsolver.Node;
-import components.mathsolver.Tree;
 
 public class MutationHelper<T> {
 

@@ -1,41 +1,41 @@
 package components.mathsolver;
 
-import java.util.regex.Pattern;
+import java.util.List;
+import java.util.Random;
+
+import components.basic.Tree;
+import components.math.Operator;
 
 public class TreeBuilder {
+
+	private int minSize = 1;
+	private int maxSize = 100;
+	private int populationSize = 200;
+	private List<Operator> operatorSet;
+	private Random random;
 	
-	public static Tree getTree(String inputTree, int length, Integer numberOfOutputs) {
-		String[] lines = inputTree.split("\n");
-		Tree tree = new Tree(length, numberOfOutputs);
-
-		for (String s : lines) {
-			tree.addPoint(parseLine(s));
-		}
-
-		return tree;
-
+	public TreeBuilder(Random random) {
+		this.random = new Random();
 	}
 
-	private static Node parseLine(String s) {
-		Node n = null;
-		if (s.startsWith("IF")) {
-			String ignoreIf = s.replaceFirst("IF", "");
-			String[] firstSplit = ignoreIf.split(Pattern.quote(">"));
-			String var = firstSplit[0];
-			String[] secondSplit = ignoreIf.split("THEN");
-			String val1 = secondSplit[0];
-			String val2 = secondSplit[1];
-			n = new Conditional(var, val1, val2);
-		} else {
-			String[] varSplit = s.split(Pattern.quote("="));
-			String variable = varSplit[0];
+	public void setPopulation(int population) {
+		this.populationSize = population;
+	}
 
-			int operator = Operator.getInt(s.replaceFirst(varSplit[0]+"=", ""));
-			String[] valueString = s.replaceFirst(varSplit[0]+"=", "").split(Pattern.quote(Operator.getOperator(operator)));
-			String value1 = valueString[0];
-			String value2 = valueString[1];
-			n = new Function(variable, operator, value2, value1);
-		}
-		return n;
+	public void setMinTreeSize(int size) {
+		this.maxSize = size;
+	}
+
+	public void setMaxTreeSize(int size) {
+		this.minSize = size;
+	}
+
+	public void setOperatorSet(List<Operator> set) {
+		this.operatorSet = set;
+	}
+
+	public List<Tree> generateTrees() {
+		return null;
+
 	}
 }

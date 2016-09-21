@@ -13,7 +13,7 @@ import components.ScoreKeeper;
 import components.Selector;
 import components.TestCase;
 import components.basic.BasicSelector;
-import components.mathsolver.Tree;
+import components.basic.Tree;
 
 public class Manager {
 

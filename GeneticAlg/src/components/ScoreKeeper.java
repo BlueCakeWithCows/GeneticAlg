@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import components.mathsolver.Tree;
+import components.basic.Tree;
 
 public class ScoreKeeper extends Scorer {
 

@@ -1,4 +1,6 @@
-package components.mathsolver;
+package components.basic;
+
+import components.math.TrueFunction;
 
 public abstract class Node {
 	public String[] values;
@@ -14,7 +16,12 @@ public abstract class Node {
 		createBlankArrays(variables, values, functions);
 	}
 
-	public abstract int compute(int currentLine, Tree tree, Parent parent);
+	public int execute(int currentLine, Tree tree, Parent parent){
+		this.parent = parent;
+		return this.compute(currentLine, tree);
+	}
+	
+	public abstract int compute(int currentLine, Tree tree);
 
 	public abstract Node getCopy();
 
@@ -59,6 +66,10 @@ public abstract class Node {
 			this.functions = new TrueFunction[functions];
 		else
 			this.functions = null;
+	}
+	
+	public Parent getParent(){
+		return parent;
 	}
 
 }

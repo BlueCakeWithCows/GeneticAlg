@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import components.mathsolver.Tree;
+import components.basic.Tree;
 
 public abstract class Scorer {
 

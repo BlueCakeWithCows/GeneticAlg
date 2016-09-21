@@ -4,8 +4,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import components.mathsolver.Tree;
-import components.mathsolver.TreeBuilder;
+import components.basic.Tree;
+import components.mathsolver.TreeParser;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -42,7 +42,7 @@ public class CodeTester extends JPanel {
 				}
 
 				Integer numberOfOutputs = Integer.parseInt(NumberOfOuts.getText());
-				Tree tree = TreeBuilder.getTree(textArea.getText(), inputs.length, numberOfOutputs);
+				Tree tree = TreeParser.getTree(textArea.getText(), inputs.length, numberOfOutputs);
 				Double[] results = tree.execute(inputs);
 				StringBuilder outputString = new StringBuilder();
 				for(Double d: results){

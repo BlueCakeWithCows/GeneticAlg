@@ -7,10 +7,10 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 
-import components.mathsolver.Conditional;
+import components.basic.Conditional;
+import components.basic.Node;
+import components.basic.Tree;
 import components.mathsolver.Function;
-import components.mathsolver.Node;
-import components.mathsolver.Tree;
 
 public class Mutator {
 	private Random random;

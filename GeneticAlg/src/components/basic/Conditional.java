@@ -1,4 +1,4 @@
-package components.mathsolver;
+package components.basic;
 
 public class Conditional extends Node {
 
@@ -15,7 +15,7 @@ public class Conditional extends Node {
 	}
 
 	@Override
-	public int compute(int currentLine, Tree tree, Parent parent) {
+	public int compute(int currentLine, Tree tree ) {
 
 		// Evaluates the function and if it returns false skips however many
 		// lines
