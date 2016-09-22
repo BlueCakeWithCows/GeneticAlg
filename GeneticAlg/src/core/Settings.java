@@ -12,6 +12,7 @@ import components.TestCase;
 public class Settings {
 	public HashMap<String, String> map;
 
+
 	public static final String URL = "TRAINING_LOC", SEED = "SEED", MUTATION_CHANCE = "MUTATION_CHANCE",
 			POPULATION = "POPULATION", SIMPLE_SELECTION_PERCENT = "PERCENT_TO_SELECT_BY_SIMPLE_SELECTION",
 			INITIAL_MAX = "INITIAL_MAX", INITIAL_MIN = "INITIAL_MIN", MAX_TREE_SIZE = "MAX_TREE_SIZE";
@@ -29,7 +30,10 @@ public class Settings {
 	public static final String NO_POINTS_FOR_ERROR_ABOVE = "NO_POINTS_FOR_ERROR_ABOVE";
 	public static final String USE_FAILED_TESTS_PRIMARY_SCORING = "USE_FAILED_TESTS_PRIMARY_SCORING";
 	public static final String USE_ARITHMETRIC_OPERATORS = "USE_ARITHMETRIC_OPERATORS";
+	public static final String USE_CONDITIONAL_OPERATORS = "USE_CONDITIONAL_OPERATORS";
+	public static final String USE_CONDITIONAL_NODES = "USE_CONDITIONAL_NODES";
 	
+
 	public Settings() {
 		map = new HashMap<String, String>();
 	}
@@ -139,6 +143,11 @@ public class Settings {
 	public boolean getUseOperatorArithmatic() {
 		return Boolean.valueOf(map.get(USE_ARITHMETRIC_OPERATORS));
 	}
-	
+	public boolean getUseOperatorConditional() {
+		return Boolean.valueOf(map.get(USE_CONDITIONAL_OPERATORS));
+	}
+	public boolean getUseConditionalNodes() {
+		return Boolean.valueOf(map.get(USE_CONDITIONAL_NODES));
+	}
 	
 }

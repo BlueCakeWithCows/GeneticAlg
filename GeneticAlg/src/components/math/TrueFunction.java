@@ -16,10 +16,6 @@ public class TrueFunction {
 		Value[] v = new Value[values.length];
 		for (int i = 0; i < v.length; i++) {
 			v[i] = tree.getValue(values[i]);
-			if(v[i]==null){
-				System.out.println(values[i]);
-				System.exit(0);
-			}
 		}
 		return operator.compute(v);
 	}

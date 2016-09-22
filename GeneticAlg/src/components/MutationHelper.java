@@ -75,7 +75,6 @@ public class MutationHelper<T> {
 			s= vars.get(i);
 		else
 			s= values.get(i - vars.size());
-		System.out.println("GRValue" +s);
 		return s;
 	}
 
@@ -86,7 +85,6 @@ public class MutationHelper<T> {
 		} else {
 		
 			String newVar = "var" + random.nextInt(300);
-			System.out.println("nVar "+newVar);
 			addVar(newVar);
 			return newVar;
 		}

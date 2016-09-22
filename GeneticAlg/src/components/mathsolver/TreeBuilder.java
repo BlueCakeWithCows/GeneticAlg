@@ -60,9 +60,8 @@ public class TreeBuilder {
 		Tree tree = new Tree(numberOfInputs, numberOfOutputs);
 		MutationHelper helper = new MutationHelper(random, tree, this.operatorSet, this.nodeSet);
 		for (int i = 0; i < size; i++) {
-			int r = random.nextInt(tree.getPointSize() + 1);
 			Node n = helper.getNewNode();
-			tree.addPoint(n, r);
+			tree.addPoint(n);
 		}
 		return tree;
 	}

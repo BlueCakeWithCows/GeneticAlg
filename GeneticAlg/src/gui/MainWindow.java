@@ -267,8 +267,8 @@ public class MainWindow extends JPanel {
 	}
 
 	int settingsBoxWidth = 140;
-	int settingsBoxHeight = 20;
-	int spacing = 2;
+	int settingsBoxHeight = 17;
+	int spacing = 1;
 	int settingsLabelWidth = 260;
 	private List<Label> settingsLabels;
 	private List<JTextField> settingsTextFields;

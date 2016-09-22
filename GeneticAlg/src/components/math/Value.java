@@ -12,6 +12,13 @@ public class Value {
 		this.value = d;
 	}
 
+	public Value(boolean b) {
+		if(b)
+			this.value = 1d;
+		else
+			this.value=-1d;
+	}
+
 	public boolean getBoolean() {
 		if (value == null)
 			return false;

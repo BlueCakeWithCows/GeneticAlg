@@ -1,5 +1,7 @@
 package components.basic;
 
+import components.math.Value;
+
 public class Conditional extends Node {
 
 	public Conditional() {
@@ -8,7 +10,7 @@ public class Conditional extends Node {
 
 	@Override
 	public String toString() {
-		String ret = "IF " + values[0] + " > " + values[1] + " THEN " + values[2];
+		String ret = "IF " + functions[0] + " THEN " + values[0];
 		StringBuilder s = new StringBuilder();
 		s.append(ret + System.lineSeparator());
 		return s.toString().trim();
@@ -21,10 +23,17 @@ public class Conditional extends Node {
 		// lines
 		boolean skip = !functions[0].compute(tree).getBoolean();
 
+		
 		int numberOfLinesToSkip;
-		if (skip)
-			numberOfLinesToSkip = tree.getValue(values[0]).getInt();
-		else
+
+		if (skip) {
+			Value value = tree.getValue(values[0]);
+			if (value == null)
+				numberOfLinesToSkip = 2;
+			else
+				numberOfLinesToSkip = value.getInt();
+			numberOfLinesToSkip = Math.max(2, numberOfLinesToSkip);
+		} else
 			numberOfLinesToSkip = 1;
 
 		return numberOfLinesToSkip;

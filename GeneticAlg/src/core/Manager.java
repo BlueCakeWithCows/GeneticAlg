@@ -14,9 +14,11 @@ import components.Selector;
 import components.TestCase;
 import components.basic.Assignment;
 import components.basic.BasicSelector;
+import components.basic.Conditional;
 import components.basic.Node;
 import components.basic.Tree;
 import components.math.ArithmaticOperators;
+import components.math.ConditionalOperators;
 import components.math.Operator;
 import components.mathsolver.TreeBuilder;
 
@@ -31,6 +33,8 @@ public class Manager {
 	}
 
 	public List<Tree> getTop(int number) {
+		if (number > children.size())
+			number = children.size() + 1;
 		return children.subList(0, number - 1);
 	}
 
@@ -99,17 +103,21 @@ public class Manager {
 		numberOfThreads = settings.getNumberOfThreads();
 		elite = settings.getElite();
 
-		if(nodeSet==null)
+		if (nodeSet == null)
 			nodeSet = new ArrayList<Node>();
 		nodeSet.clear();
 		nodeSet.add(new Assignment());
-		//nodeSet.add(new Conditional());
-		
+		if (settings.getUseConditionalNodes())
+			nodeSet.add(new Conditional());
+		// nodeSet.add(new Conditional());
+
 		if (operatorSet == null)
 			operatorSet = new ArrayList<Operator>();
 		operatorSet.clear();
 		if (settings.getUseOperatorArithmatic())
 			operatorSet.addAll(ArithmaticOperators.getArithmaticOperators());
+		if (settings.getUseOperatorConditional())
+			operatorSet.addAll(ConditionalOperators.getConditionalOperators());
 
 		if (mutator == null)
 			mutator = new Mutator();
