@@ -12,15 +12,16 @@ import components.Mutator;
 import components.ScoreKeeper;
 import components.Selector;
 import components.TestCase;
+import components.basic.Assignment;
 import components.basic.BasicSelector;
+import components.basic.Node;
 import components.basic.Tree;
 import components.math.ArithmaticOperators;
 import components.math.Operator;
+import components.mathsolver.TreeBuilder;
 
 public class Manager {
 
-	
-	
 	public int getRunningTime() {
 		return (int) this.totalRunTime;
 	}
@@ -69,44 +70,15 @@ public class Manager {
 
 	double topPercent;
 
-	public void shavePopulationToTopAndMutate() {
-		int lastIndex = (int) (children.size() * topPercent);
-		children = children.subList(0, lastIndex);
-		int i = 0;
-		while (children.size() < population) {
-			i = i % lastIndex;
-			Tree tree = mutator.mutateTree(children.get(i));
-			if (tree.getSize() < this.maxSize) {
-				children.add(tree);
-			}
-		}
-		generation++;
-	}
-
-	int minInitPop, maxInitPop;
-
 	public void generatePopulation() {
-		children.clear();
-		for (int i = 0; i < population; i++) {
-			children.add(generateTree(random.nextInt(maxInitPop) + minInitPop));
-		}
-	}
-
-	private Tree generateTree(int size) {
-		Tree tree = new Tree(inputSpace, outputSpace);
-		MutationHelper helper = new MutationHelper(random, tree);
-		for (int i = 0; i < size; i++) {
-			int r = random.nextInt(tree.getPointSize() + 1);
-			tree.addPoint(helper.getNewNode(), r);
-		}
-		return tree;
+		children = builder.generateTrees();
 	}
 
 	public Manager(Settings settings, List<TestCase> cases) {
-		this.applySettings(settings);
 		children = new ArrayList<Tree>();
 		this.inputSpace = cases.get(0).input.length;
 		this.outputSpace = cases.get(0).out.length;
+		this.applySettings(settings);
 		this.scorer.setTestSuite(cases);
 	}
 
@@ -123,23 +95,28 @@ public class Manager {
 			random.setSeed(seed);
 		}
 
-		population = settings.getPopulation();
-		maxSize = settings.getMaxTreeSize();
-		maxInitPop = settings.getMaxInitPop();
-		minInitPop = settings.getMinInitPop();
 		topPercent = settings.getTopPercent();
 		numberOfThreads = settings.getNumberOfThreads();
 		elite = settings.getElite();
+
+		if(nodeSet==null)
+			nodeSet = new ArrayList<Node>();
+		nodeSet.clear();
+		nodeSet.add(new Assignment());
+		//nodeSet.add(new Conditional());
 		
-		if(settings.getUseOperatorArithmatic)
+		if (operatorSet == null)
+			operatorSet = new ArrayList<Operator>();
+		operatorSet.clear();
+		if (settings.getUseOperatorArithmatic())
 			operatorSet.addAll(ArithmaticOperators.getArithmaticOperators());
-		
-		
+
 		if (mutator == null)
 			mutator = new Mutator();
 		mutator.setMutationChance(settings.getMutationChance());
 		mutator.setRandom(random);
 		mutator.setOperatorSet(operatorSet);
+		mutator.setNodeSet(nodeSet);
 
 		if (scorer == null)
 			scorer = new ScoreKeeper();
@@ -149,14 +126,15 @@ public class Manager {
 		scorer.setError(settings.getErrorMargin());
 		scorer.setNoPointMark(settings.getNoPointsForErrorAbove());
 		scorer.setUseFailedAsPrimary(settings.getUseFailedTestsPrimaryScoring());
-		
+		scorer.setMaxTreeSize(settings.getMaxTreeSize());
+
 		if (breedingSummary == null)
 			breedingSummary = new BreedingSummary();
 		breedingSummary.elite = settings.getElite();
 		breedingSummary.numberPerPairToSelect = settings.getNumberOfParents();
 		breedingSummary.percentMutateOnly = settings.getPercentToMutateOnly();
 		breedingSummary.percentMixBreed = settings.getSimpleMixBreedPercent();
-		breedingSummary.population = this.population;
+		breedingSummary.population = settings.getPopulation();
 		breedingSummary.recalc();
 
 		if (breeder == null)
@@ -169,12 +147,18 @@ public class Manager {
 			selector = new BasicSelector();
 		selector.setRandom(random);
 		selector.setBreedingSummary(breedingSummary);
-		
-		
-		if(operatorSet ==null)
-			operatorSet = new ArrayList<Operator>();
-		operatorSet.clear();
-		
+
+		if (builder == null)
+			builder = new TreeBuilder();
+		builder.setRandom(random);
+		builder.setMinTreeSize(settings.getMinInitPop());
+		builder.setMaxTreeSize(settings.getMaxInitPop());
+		builder.setPopulation(settings.getPopulation());
+		builder.setOperatorSet(operatorSet);
+		builder.setNodeSet(nodeSet);
+		builder.setNumberOfInputs(inputSpace);
+		builder.setNumberOfOutputs(outputSpace);
+
 	}
 
 	private int generation;
@@ -187,10 +171,10 @@ public class Manager {
 	private BasicSelector selector;
 	private BreedingSummary breedingSummary;
 	private List<Operator> operatorSet;
+	private List<Node> nodeSet;
 	private List<Tree> children;
+	private TreeBuilder builder;
 	private int inputSpace, outputSpace;
-	private int population;
-	private int maxSize;
 	private int numberOfThreads;
 	private int elite;
 	private double totalRunTime;

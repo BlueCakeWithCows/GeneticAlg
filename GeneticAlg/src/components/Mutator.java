@@ -17,6 +17,7 @@ public class Mutator {
 	private double mutChance;
 	private MutationHelper helper;
 	private List<Operator> operators;
+	private List<Node> nodes;
 	
 	public Mutator(SecureRandom random, double mutChance) {
 		this.random = random;
@@ -26,6 +27,9 @@ public class Mutator {
 	
 	public void setOperatorSet(List<Operator> operators){
 		this.operators = operators;
+	}
+	public void setNodeSet(List<Node> nodes){
+		this.nodes = nodes;
 	}
 
 	public void setMutationChance(double d) {
@@ -49,7 +53,7 @@ public class Mutator {
 	}
 
 	public Tree mutateTree(Tree oldTree) {
-		helper = new MutationHelper(random, oldTree.getDefaultVariables(), oldTree.getDefaultNames(),operators);
+		helper = new MutationHelper(random, oldTree.getDefaultVariables(), oldTree.getDefaultNames(),operators,nodes);
 
 		Tree tree = new Tree(oldTree.inputSize, oldTree.outputSize);
 

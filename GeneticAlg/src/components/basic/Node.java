@@ -52,20 +52,17 @@ public abstract class Node {
 	}
 
 	public void createBlankArrays(Integer variables, Integer values, Integer functions) {
-		if (variables != null && variables > 0)
-			this.variables = new String[variables];
-		else
-			this.variables = null;
+		if (variables == null)
+			variables = 0;
+		this.variables = new String[variables];
 
-		if (values != null && values > 0)
-			this.values = new String[values];
-		else
-			this.values = null;
+		if (values == null)
+			values = 0;
+		this.values = new String[values];
+		if (functions == 0)
+			functions = 0;
+		this.functions = new TrueFunction[functions];
 
-		if (functions != null && functions > 0)
-			this.functions = new TrueFunction[functions];
-		else
-			this.functions = null;
 	}
 
 	public Parent getParent() {

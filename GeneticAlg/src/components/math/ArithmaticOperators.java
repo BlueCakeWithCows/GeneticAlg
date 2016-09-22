@@ -43,8 +43,9 @@ public abstract class ArithmaticOperators extends Operator {
 			try {
 				return new Value(v[0].getDouble() + v[1].getDouble());
 			} catch (Exception e) {
-				throw new InvalidValueException();
+				
 			}
+			return new Value(0);
 		}
 
 		@Override
@@ -60,8 +61,9 @@ public abstract class ArithmaticOperators extends Operator {
 			try {
 				return new Value(v[0].getDouble() - v[1].getDouble());
 			} catch (Exception e) {
-				throw new InvalidValueException();
+				
 			}
+			return new Value(0);
 		}
 
 		@Override
@@ -76,8 +78,9 @@ public abstract class ArithmaticOperators extends Operator {
 			try {
 				return new Value(v[0].getDouble() * v[1].getDouble());
 			} catch (Exception e) {
-				throw new InvalidValueException();
+				
 			}
+			return new Value(0);
 		}
 
 		@Override
@@ -92,8 +95,8 @@ public abstract class ArithmaticOperators extends Operator {
 			try {
 				return new Value(v[0].getDouble() / v[1].getDouble());
 			} catch (Exception e) {
-				throw new InvalidValueException();
 			}
+			return new Value(0);
 		}
 
 		@Override

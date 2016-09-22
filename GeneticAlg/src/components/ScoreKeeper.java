@@ -100,4 +100,8 @@ public class ScoreKeeper extends Scorer {
 		this.errorMargin = errorMargin2;
 	}
 
+	public void setMaxTreeSize(int maxTreeSize) {
+		// TODO Auto-generated method stub
+		
+	}
 }

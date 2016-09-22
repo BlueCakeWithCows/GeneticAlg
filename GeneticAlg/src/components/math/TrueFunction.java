@@ -16,6 +16,10 @@ public class TrueFunction {
 		Value[] v = new Value[values.length];
 		for (int i = 0; i < v.length; i++) {
 			v[i] = tree.getValue(values[i]);
+			if(v[i]==null){
+				System.out.println(values[i]);
+				System.exit(0);
+			}
 		}
 		return operator.compute(v);
 	}
@@ -26,5 +30,15 @@ public class TrueFunction {
 			f.values[i] = values[i];
 		}
 		return f;
+	}
+	
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append(operator.toString() +"_");
+		for(String s: values){
+			sb.append(s+",");
+		}
+		return sb.substring(0, sb.length()-1);
 	}
 }

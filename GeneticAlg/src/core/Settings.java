@@ -28,7 +28,7 @@ public class Settings {
 	public static final String SCORER_ERROR_MARGIN = "SCORER_ERROR_MARGIN";
 	public static final String NO_POINTS_FOR_ERROR_ABOVE = "NO_POINTS_FOR_ERROR_ABOVE";
 	public static final String USE_FAILED_TESTS_PRIMARY_SCORING = "USE_FAILED_TESTS_PRIMARY_SCORING";
-	
+	public static final String USE_ARITHMETRIC_OPERATORS = "USE_ARITHMETRIC_OPERATORS";
 	
 	public Settings() {
 		map = new HashMap<String, String>();
@@ -134,6 +134,10 @@ public class Settings {
 
 	public boolean getUseFailedTestsPrimaryScoring() {
 		return Boolean.valueOf(map.get(USE_FAILED_TESTS_PRIMARY_SCORING));
+	}
+
+	public boolean getUseOperatorArithmatic() {
+		return Boolean.valueOf(map.get(USE_ARITHMETRIC_OPERATORS));
 	}
 	
 	

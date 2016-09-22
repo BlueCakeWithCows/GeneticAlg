@@ -18,30 +18,41 @@ public class MutationHelper<T> {
 	private List<Node> validNodes;
 	private List<Operator> validOperators;
 
-	public MutationHelper(Random random2, ArrayList<String> arrayList, ArrayList<String> arrayList2, List<Operator> operators) {
+	public MutationHelper(Random random2, ArrayList<String> arrayList, ArrayList<String> arrayList2,
+			List<Operator> operators, List<Node> noes) {
 		this.random = random2;
 		this.vars = arrayList;
 		this.values = arrayList2;
 		this.validOperators = operators;
+		this.validNodes = noes;
 	}
 
-	public MutationHelper(Random random2, Tree tree,List<Operator> operators) {
-		this(random2, tree.getDefaultVariables(), tree.getDefaultNames(),operators);
+	public void setValidNodes(List<Node> noes) {
+		this.validNodes = noes;
+	}
+
+	public MutationHelper(Random random2, Tree tree, List<Operator> operators, List<Node> noes) {
+		this(random2, tree.getDefaultVariables(), tree.getDefaultNames(), operators, noes);
+	}
+
+	public MutationHelper(Random rand, Tree tree, List<Operator> operatorSet) {
+		this(rand, tree.getDefaultVariables(), tree.getDefaultNames(), operatorSet, null);
+
 	}
 
 	public Node getNewNode() {
 		int index = random.nextInt(validNodes.size());
 		Node n = validNodes.get(index).getInstanceOf();
-		
 		for (int i = 0; i < n.values.length; i++) {
 			n.values[i] = this.getRandomValue();
+		}
+		for (int i = 0; i < n.functions.length; i++) {
+			n.functions[i] = this.getRandomFunction();
 		}
 		for (int i = 0; i < n.variables.length; i++) {
 			n.variables[i] = this.getRandomVariable();
 		}
-		for (int i = 0; i < n.variables.length; i++) {
-			n.functions[i] = this.getRandomFunction();
-		}
+		
 		return n;
 	}
 
@@ -59,10 +70,13 @@ public class MutationHelper<T> {
 
 	public String getRandomValue() {
 		int i = random.nextInt(vars.size() + values.size());
+		String s;
 		if (i < vars.size())
-			return vars.get(i);
+			s= vars.get(i);
 		else
-			return values.get(i - vars.size());
+			s= values.get(i - vars.size());
+		System.out.println("GRValue" +s);
+		return s;
 	}
 
 	public String getRandomVariable() {
@@ -70,7 +84,9 @@ public class MutationHelper<T> {
 		if (i < vars.size()) {
 			return vars.get(i);
 		} else {
+		
 			String newVar = "var" + random.nextInt(300);
+			System.out.println("nVar "+newVar);
 			addVar(newVar);
 			return newVar;
 		}
@@ -88,5 +104,16 @@ public class MutationHelper<T> {
 
 	public boolean hasValue(String string) {
 		return (vars.contains(string) || values.contains(string));
+	}
+
+	public List<String> getValues() {
+		List<String> fuck = new ArrayList<String>();
+		for (String x : this.values) {
+			fuck.add(x);
+		}
+		for (String x : this.vars) {
+			fuck.add(x);
+		}
+		return fuck;
 	}
 }

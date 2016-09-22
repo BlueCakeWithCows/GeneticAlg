@@ -19,8 +19,8 @@ public class Assignment extends Node {
 
 	@Override
 	public int compute(int currentLine, Tree tree) {
+		System.out.println("assigned"+variables[0]);
 		tree.setVariable(variables[0], functions[0].compute(tree));
-
 		return 1;
 	}
 	

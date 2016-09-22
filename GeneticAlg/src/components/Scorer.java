@@ -178,4 +178,5 @@ public abstract class Scorer {
 	public void setUseFailedAsPrimary(boolean useFailedTestsPrimaryScoring) {
 		useFailedAsPrimary = useFailedTestsPrimaryScoring;
 	}
+	
 }
