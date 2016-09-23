@@ -2,9 +2,11 @@ package components;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
+import components.Scorer.ScoredTree;
 import components.basic.Tree;
 
 public abstract class Scorer {
@@ -24,6 +26,24 @@ public abstract class Scorer {
 
 	public Scorer() {
 
+	}
+
+	public abstract void scoreTree(List<TestCase> cases, ScoredTree tree);
+
+	protected List<ScoredTree> score(List<Tree> children, List<TestCase> cases) {
+		List<ScoredTree> sTree = new ArrayList<ScoredTree>();
+		for (Tree tree : children) {
+			tree.failedTests = 0;
+			tree.totalTests = 0;
+			ScoredTree STree = new ScoredTree(tree);
+			sTree.add(STree);
+		}
+
+		for (ScoredTree ttt : sTree) {
+			this.scoreTree(cases, ttt);
+		}
+
+		return sTree;
 	}
 
 	private List<TestCase> getTestingSet() {
@@ -74,9 +94,6 @@ public abstract class Scorer {
 		this.cheatRandomOnDataPercent = cheat;
 	}
 
-	/** Returns List ordered best to worst */
-	protected abstract List<ScoredTree> score(List<Tree> children, List<TestCase> cases);
-
 	public List<Tree> parallelScore(List<Tree> children, int numberOfThreads) {
 		List<TestCase> cases = this.getTestingSet();
 
@@ -113,7 +130,7 @@ public abstract class Scorer {
 			}
 		}
 		for (Tree child : children) {
-			ScoredTree sc =new ScoredTree(child);
+			ScoredTree sc = new ScoredTree(child);
 			sc.runningScore = child.score;
 			newList.add(sc);
 		}
@@ -123,13 +140,27 @@ public abstract class Scorer {
 
 		for (ScoredTree tree : newList) {
 			finalList.add(tree.tree);
-			
+
 		}
 		return finalList;
 	}
 
 	public void sort(List<ScoredTree> newList) {
-		Collections.sort(newList);
+		Collections.sort(newList, new Comparator(){
+			
+		});
+	}
+	@Override
+	public int compareTo(ScoredTree o) {
+		int res = 0;
+
+		if (useFailedAsPrimary)
+			res = Integer.compare(this.tree.failedTests, o.tree.failedTests);
+		if (res == 0)
+			res = Double.compare(o.runningScore, this.runningScore);
+		if (res == 0)
+			res = Integer.compare(this.tree.getSize(), o.tree.getSize());
+		return res;
 	}
 
 	public class ParallelScorer extends Thread implements Runnable {
@@ -148,7 +179,7 @@ public abstract class Scorer {
 		}
 	}
 
-	protected class ScoredTree implements Comparable<ScoredTree> {
+	protected class ScoredTree {
 		public ScoredTree(Tree tree) {
 			this.tree = tree;
 		}
@@ -158,19 +189,6 @@ public abstract class Scorer {
 		Tree tree;
 		double[] tempScores;
 		double runningScore = 0;
-
-		@Override
-		public int compareTo(ScoredTree o) {
-			int res = 0;
-
-			if (useFailedAsPrimary)
-				res = Integer.compare(this.tree.failedTests, o.tree.failedTests);
-			if (res == 0)
-				res = Double.compare(o.runningScore, this.runningScore);
-			if (res == 0)
-				res = Integer.compare(this.tree.getSize(), o.tree.getSize());
-			return res;
-		}
 	}
 
 	boolean useFailedAsPrimary = false;
@@ -178,5 +196,5 @@ public abstract class Scorer {
 	public void setUseFailedAsPrimary(boolean useFailedTestsPrimaryScoring) {
 		useFailedAsPrimary = useFailedTestsPrimaryScoring;
 	}
-	
+
 }
