@@ -17,6 +17,8 @@ import components.basic.BasicSelector;
 import components.basic.Conditional;
 import components.basic.Node;
 import components.basic.Tree;
+import components.comparators.FailScoreLengthComparator;
+import components.comparators.ScoreFailLength;
 import components.math.ArithmaticOperators;
 import components.math.ConditionalOperators;
 import components.math.Operator;
@@ -128,12 +130,15 @@ public class Manager {
 
 		if (scorer == null)
 			scorer = new ScoreKeeper();
+		if (settings.getUseFailedTestsPrimaryScoring())
+			scorer.setComparator(new FailScoreLengthComparator());
+		else
+			scorer.setComparator(new ScoreFailLength());
 		scorer.setRandom(random);
 		scorer.setQuickRandom(settings.getQuickRandomTestSelection());
 		scorer.setUsableTestSuitePercent(settings.getTestDataToUse());
 		scorer.setError(settings.getErrorMargin());
 		scorer.setNoPointMark(settings.getNoPointsForErrorAbove());
-		scorer.setUseFailedAsPrimary(settings.getUseFailedTestsPrimaryScoring());
 		scorer.setMaxTreeSize(settings.getMaxTreeSize());
 
 		if (breedingSummary == null)

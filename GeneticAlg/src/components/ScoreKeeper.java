@@ -1,12 +1,7 @@
 package components;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-
-import components.basic.Tree;
 
 public class ScoreKeeper extends Scorer {
 
@@ -19,22 +14,8 @@ public class ScoreKeeper extends Scorer {
 	}
 
 	public double scale = 10000d;
-	public double errorMargin = 0d;
-	public double aboveThisNoScorePoints = 100;
-	private double lowest = 0d;
+	
 
-	public void setNoPointMark(double d) {
-		this.aboveThisNoScorePoints = d;
-	}
-
-	public void setError(double errorMargin2) {
-		this.errorMargin = errorMargin2;
-	}
-
-	public void setMaxTreeSize(int maxTreeSize) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void scoreTree(List<TestCase> cases, ScoredTree tree) {

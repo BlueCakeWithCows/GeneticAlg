@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-import components.Scorer.ScoredTree;
 import components.basic.Tree;
 
 public abstract class Scorer {
@@ -14,7 +13,7 @@ public abstract class Scorer {
 	private List<TestCase> totalSetOfTests;
 	private double percentOfTestsToUseEachRun;
 	private boolean cheatRandomOnDataPercent;
-
+	private Comparator<ScoredTree> comparator;
 	private Random random;
 
 	public Scorer(List<TestCase> cases, double testDataToUse, Random r) {
@@ -131,7 +130,6 @@ public abstract class Scorer {
 		}
 		for (Tree child : children) {
 			ScoredTree sc = new ScoredTree(child);
-			sc.runningScore = child.score;
 			newList.add(sc);
 		}
 
@@ -146,21 +144,11 @@ public abstract class Scorer {
 	}
 
 	public void sort(List<ScoredTree> newList) {
-		Collections.sort(newList, new Comparator(){
-			
-		});
+		Collections.sort(newList,comparator);
 	}
-	@Override
-	public int compareTo(ScoredTree o) {
-		int res = 0;
-
-		if (useFailedAsPrimary)
-			res = Integer.compare(this.tree.failedTests, o.tree.failedTests);
-		if (res == 0)
-			res = Double.compare(o.runningScore, this.runningScore);
-		if (res == 0)
-			res = Integer.compare(this.tree.getSize(), o.tree.getSize());
-		return res;
+	
+	public void setComparator(Comparator<ScoredTree> comparator){
+		this.comparator = comparator;
 	}
 
 	public class ParallelScorer extends Thread implements Runnable {
@@ -178,23 +166,20 @@ public abstract class Scorer {
 			this.newTrees = score(trees, cases);
 		}
 	}
+	public double errorMargin = 0d;
+	public double aboveThisNoScorePoints = 100;
+	public double lowest = 0d;
 
-	protected class ScoredTree {
-		public ScoredTree(Tree tree) {
-			this.tree = tree;
-		}
-
-		public boolean[] normaled;
-
-		Tree tree;
-		double[] tempScores;
-		double runningScore = 0;
+	public void setNoPointMark(double d) {
+		this.aboveThisNoScorePoints = d;
 	}
 
-	boolean useFailedAsPrimary = false;
+	public void setError(double errorMargin2) {
+		this.errorMargin = errorMargin2;
+	}
+	public void setMaxTreeSize(int maxTreeSize) {
+		// TODO Auto-generated method stub
 
-	public void setUseFailedAsPrimary(boolean useFailedTestsPrimaryScoring) {
-		useFailedAsPrimary = useFailedTestsPrimaryScoring;
 	}
 
 }

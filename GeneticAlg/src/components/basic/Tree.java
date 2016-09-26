@@ -21,6 +21,14 @@ public class Tree {
 	public int inputSize;
 	public Double[] outputs;
 
+	public List<Value> getValues(){
+		List<Value> values = new ArrayList<Value>();
+		values.addAll(variables.values());
+		values.addAll(this.values.values());
+		values.addAll(variables.values());
+		return values;
+	}
+	
 	public Tree(int inp, int out) {
 		points = new ArrayList<Node>();
 		outputSize = out;
@@ -29,6 +37,7 @@ public class Tree {
 		values = new HashMap<String, Value>();
 		constants = new HashMap<String, Value>();
 	}
+
 
 	public Double[] execute(double[] inputs) {
 		values.clear();
