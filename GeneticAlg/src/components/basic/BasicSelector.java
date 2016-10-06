@@ -31,7 +31,6 @@ public class BasicSelector extends Selector {
 				}
 			}
 		}
-
 		return grandArray;
 
 	}

@@ -1,153 +1,108 @@
 package core;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.JTextField;
-
-import components.TestCase;
-
 public class Settings {
-	public HashMap<String, String> map;
 
+	private final List<SettingsValue<?>> settings = new ArrayList<SettingsValue<?>>();
 
-	public static final String URL = "TRAINING_LOC", SEED = "SEED", MUTATION_CHANCE = "MUTATION_CHANCE",
-			POPULATION = "POPULATION", SIMPLE_SELECTION_PERCENT = "PERCENT_TO_SELECT_BY_SIMPLE_SELECTION",
-			INITIAL_MAX = "INITIAL_MAX", INITIAL_MIN = "INITIAL_MIN", MAX_TREE_SIZE = "MAX_TREE_SIZE";
-
-	public static final String TEST_DATA_TO_USE = "TEST_DATA_TO_USE";
-	public static final String QUICK_RANDOM_TEST_SELECTION = "QUICK_RANDOM_TEST_SELECTION";
-	public static final String NUMBER_OF_THREADS = "NUMBER_OF_THREADS";
-	public static final String SIMPLE_ROULETTE_SELECTION_PERCENT = "PERCENT_TO_SELECT_BY_SIMPLE_ROULETTE_SELECTION";
-	public static final String PERCENT_TO_MUTATE_ONLY = "PERCENT_TO_MUTATE_ONLY";
-	public static final String PERCENT_TO_SIMPLE_MIX_BREED = "PERCENT_TO_SIMPLE_MIX_BREED";
-	public static final String NUMBER_OF_ELITE = "NUMBER_OF_ELITE";
-	public static final String USE_SECURE_RANDOM = "USE_SECURE_RANDOM";
-	public static final String NUMBER_OF_PARENTS_PER_OFFSPRING = "NUMBER_OF_PARENTS_PER_OFFSPRING";
-	public static final String SCORER_ERROR_MARGIN = "SCORER_ERROR_MARGIN";
-	public static final String NO_POINTS_FOR_ERROR_ABOVE = "NO_POINTS_FOR_ERROR_ABOVE";
-	public static final String USE_FAILED_TESTS_PRIMARY_SCORING = "USE_FAILED_TESTS_PRIMARY_SCORING";
-	public static final String USE_ARITHMETRIC_OPERATORS = "USE_ARITHMETRIC_OPERATORS";
-	public static final String USE_CONDITIONAL_OPERATORS = "USE_CONDITIONAL_OPERATORS";
-	public static final String USE_CONDITIONAL_NODES = "USE_CONDITIONAL_NODES";
-	
-
-	public Settings() {
-		map = new HashMap<String, String>();
+	public List<SettingsValue<?>> getSettings() {
+		return settings;
 	}
 
-	public Settings(List<String> list) {
-		this();
-		for (String string : list) {
-			String value = "";
-			String key = string.split(":")[0];
-			if (string.split(":").length > 1)
-				value = string.replaceFirst(string.split(":")[0] + ":", "");
-			map.put(key, value);
+	public static void main(String[] args) {
+		Settings s = new Settings();
+		System.out.println(s.toString());
+	}
+
+	public final SettingsValue<Long> seed = new SettingsValue<Long>(0l, "SEED");
+
+	public final SettingsValue<Integer> initialTreeMinLength = new SettingsValue<Integer>(0, "INITIAL_TREE_MIN_LENGTH");
+	public final SettingsValue<Integer> initialTreeMaxLength = new SettingsValue<Integer>(0, "INITIAL_TREE_MAX_LENGTH");
+	public final SettingsValue<Integer> treeMinLength = new SettingsValue<Integer>(0, "TREE_MIN_LENGTH");
+	public final SettingsValue<Integer> treeMaxLength = new SettingsValue<Integer>(0, "TREE_MAX_LENGTH");
+
+	public final SettingsValue<TestData> testdata = new SettingsValue<TestData>(new TestData(), "TEST_DATA");
+	public final SettingsValue<String> testSelection = new SettingsValue<String>("BLOCK RANDOM",
+			new String[] { "BLOCK RANDOM", "SIMPLE RANDOM", "ALL" }, "TEST_SELECTION_METHOD");
+	public final SettingsValue<Integer> testsPerTreeSize = new SettingsValue<Integer>(0, "TESTS_PER_TREE_SIZE");
+
+	public final SettingsValue<Integer> numberOfThreads = new SettingsValue<Integer>(0, "NUMBER_OF_THREADS");;
+
+	public final SettingsValue<Integer> eliteSize = new SettingsValue<Integer>(0, "ELITE_SIZE");;
+	public final SettingsValue<Integer> populationSize = new SettingsValue<Integer>(0, "POPULATION_SIZE");;
+
+	public final SettingsValue<Boolean> cryptoRandom = new SettingsValue<Boolean>(false, "CRYTO_RANDOM");;
+
+	public final SettingsValue<Double> mutationChance = new SettingsValue<Double>(0d, "MUTATION_CHANCE");
+
+	public final SettingsValue<Double> mutationOnlyPercent = new SettingsValue<Double>(0d, "MUTATION_ONLY_Percent");
+	public final SettingsValue<Integer> parentsPerTree = new SettingsValue<Integer>(0, "PARENTS_PER_TREE");
+
+	public final SettingsValue<Integer> maxDistanceForAccuracyScoring = new SettingsValue<Integer>(100,
+			"MAX_DISTANCE_FOR_ACCURACY_SCORING");
+	public final SettingsValue<Integer> errorMarginForScoring = new SettingsValue<Integer>(0,
+			"ERROR_MARGIN_FOR_SCORING");
+
+	public final SettingsValue<Integer> operationDistanceScoringPriority = new SettingsValue<Integer>(0,
+			"OPERATION_DISTANCE_SCORING_PRIORITY");
+	public final SettingsValue<Integer> lengthScoringPriority = new SettingsValue<Integer>(10,
+			"LENGTH_SCORING_PRIORITY");
+	public final SettingsValue<Integer> accuracyScoringPriority = new SettingsValue<Integer>(4,
+			"ACCURACY_DISTANCE_SCORING_PRIORITY");
+	public final SettingsValue<Integer> failedTestScoringPriority = new SettingsValue<Integer>(2,
+			"FAILED_TEST_SCORING_PRIORITY");
+
+	public final SettingsValue<Boolean> conditionalNodes = new SettingsValue<Boolean>(false, "CONDITIONAL_NODES");
+	public final SettingsValue<Boolean> functionNodes = new SettingsValue<Boolean>(true, "FUNCTION_NODES");
+
+	public final SettingsValue<Boolean> simpleArithmetricOperators = new SettingsValue<Boolean>(true,
+			"SIMPLE_ARITHMETRIC_OPERATORS");
+	public final SettingsValue<Boolean> advancedArithmetricOperators = new SettingsValue<Boolean>(false,
+			"ADVANCED_ARITHMETRIC_OPERATORS");
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		for (SettingsValue<?> v : settings) {
+			builder.append(v + "\n");
+		}
+		builder.deleteCharAt(builder.length() - 1);
+
+		return builder.toString();
+	}
+
+	public class SettingsValue<T> {
+		public T obj;
+		public T[] possibilities;
+		public final String ID;
+
+		public SettingsValue(T obj, String ID) {
+			this.obj = obj;
+			this.ID = ID;
+			settings.add(this);
+		}
+
+		public SettingsValue(T obj, T[] possibilities, String ID) {
+			this.obj = obj;
+			this.ID = ID;
+			settings.add(this);
+			this.possibilities = possibilities;
+		}
+
+		public T getValue() {
+			return obj;
+		}
+
+		public void setValue(T o) {
+			obj = o;
+		}
+
+		@Override
+		public String toString() {
+			return this.ID + ":" + obj.toString();
 		}
 	}
 
-	public long getSeed() {
-		return Long.valueOf(map.get(SEED));
-	}
-
-	public double getMutationChance() {
-		return Double.valueOf(map.get(MUTATION_CHANCE));
-	}
-
-	public int getPopulation() {
-		return Integer.valueOf(map.get(POPULATION));
-	}
-
-	public double getTopPercent() {
-		return Double.valueOf(map.get(SIMPLE_SELECTION_PERCENT));
-	}
-
-	public int getMinInitPop() {
-		return Integer.valueOf(map.get(INITIAL_MIN));
-	}
-
-	public double getSimpleRoulettePercent() {
-		return Double.valueOf(map.get(SIMPLE_ROULETTE_SELECTION_PERCENT));
-	}
-
-	public double getPercentToMutateOnly() {
-		return Double.valueOf(map.get(PERCENT_TO_MUTATE_ONLY));
-	}
-
-	public int getMaxInitPop() {
-		return Integer.valueOf(map.get(INITIAL_MAX));
-	}
-
-	public int getMaxTreeSize() {
-		return Integer.valueOf(map.get(MAX_TREE_SIZE));
-	}
-
-	public double getTestDataToUse() {
-		return Double.valueOf(map.get(TEST_DATA_TO_USE));
-	}
-
-	public void set(String key, String value) {
-		map.put(key, value);
-	}
-
-	public void save(File file) {
-		List<String> stuff = new ArrayList<String>();
-		for (String ok : map.keySet()) {
-			stuff.add(ok + ":" + map.get(ok));
-		}
-		SimpleSaveLoad.save(file, stuff);
-	}
-
-	public String getURL() {
-		return map.get(URL);
-	}
-
-	public boolean getQuickRandomTestSelection() {
-		return Boolean.valueOf(map.get(QUICK_RANDOM_TEST_SELECTION));
-	}
-
-	public int getNumberOfThreads() {
-		return Integer.valueOf(map.get(NUMBER_OF_THREADS));
-	}
-
-	public int getElite() {
-		return Integer.valueOf(map.get(NUMBER_OF_ELITE));
-	}
-
-	public int getNumberOfParents() {
-		return Integer.valueOf(map.get(NUMBER_OF_PARENTS_PER_OFFSPRING));
-	}
-
-	public boolean getUseSecureRandom() {
-		return Boolean.valueOf(map.get(USE_SECURE_RANDOM));
-	}
-
-	public double getErrorMargin() {
-		return Double.valueOf(map.get(SCORER_ERROR_MARGIN));
-	}
-
-	public double getSimpleMixBreedPercent() {
-		return Double.valueOf(map.get(PERCENT_TO_SIMPLE_MIX_BREED));
-	}
-	public double getNoPointsForErrorAbove() {
-		return Double.valueOf(map.get(NO_POINTS_FOR_ERROR_ABOVE));
-	}
-
-	public boolean getUseFailedTestsPrimaryScoring() {
-		return Boolean.valueOf(map.get(USE_FAILED_TESTS_PRIMARY_SCORING));
-	}
-
-	public boolean getUseOperatorArithmatic() {
-		return Boolean.valueOf(map.get(USE_ARITHMETRIC_OPERATORS));
-	}
-	public boolean getUseOperatorConditional() {
-		return Boolean.valueOf(map.get(USE_CONDITIONAL_OPERATORS));
-	}
-	public boolean getUseConditionalNodes() {
-		return Boolean.valueOf(map.get(USE_CONDITIONAL_NODES));
-	}
-	
 }
