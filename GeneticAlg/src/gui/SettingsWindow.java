@@ -66,8 +66,7 @@ public class SettingsWindow extends JPanel {
 	}
 
 	protected void saveSettingsToFile() {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	protected void loadSettingsFromFile() {

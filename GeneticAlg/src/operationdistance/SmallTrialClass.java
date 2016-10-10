@@ -11,9 +11,9 @@ public class SmallTrialClass {
 	public static void main(String[] args) {
 		double advancedTime = 0, simpleTime = 0;
 		double advancedScore = 0, simpleScore = 0;
-		int goal = 1000002;
+		int goal = 333;
 		HashSet<Integer> set = new HashSet<Integer>();
-		set.addAll(Arrays.asList(new Integer[]{0,1,2,72,63,41,57}));
+		set.addAll(Arrays.asList(new Integer[]{0,1,2,26,333,108}));
 
 		AdvancedDivisorAlgorithm advanced = new AdvancedDivisorAlgorithm();
 		advanced.setDebug(true);
