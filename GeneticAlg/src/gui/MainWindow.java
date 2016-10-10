@@ -60,12 +60,12 @@ public class MainWindow extends JPanel {
 				File file = chooser.getSelectedFile();
 				if (file != null) {
 					currentSettingsFileTextField.setText(file.getAbsolutePath());
-					try {
-						settings = new Settings(SimpleSaveLoad.load(file));
-						copyFromSettings();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
+//					try {
+//						settings = SettingsLoader.loadSettingsFrom(file);
+//						copyFromSettings();
+//					} catch (IOException e1) {
+//						e1.printStackTrace();
+//					}
 				}
 			}
 
@@ -112,7 +112,7 @@ public class MainWindow extends JPanel {
 				File file = chooser.getSelectedFile();
 				prepSettings();
 				if (file != null) {
-					settings.save(file);
+//					settings.save(file);
 				}
 			}
 		});
@@ -237,11 +237,11 @@ public class MainWindow extends JPanel {
 		chooser.setCurrentDirectory(files);
 
 		File defT = new File(files.getAbsolutePath() + "/default.txt");
-		try {
-			settings = new Settings(SimpleSaveLoad.load(defT));
-			setFile(settings.getURL());
-		} catch (IOException e2) {
-		}
+//		try {
+////			settings = new Settings(SimpleSaveLoad.load(defT));
+////			setFile(settings.getURL());
+//		} catch (IOException e2) {
+//		}
 		this.copyFromSettings();
 	}
 
@@ -276,7 +276,7 @@ public class MainWindow extends JPanel {
 	protected void copyFromSettings() {
 		if (settings == null)
 			return;
-		TrainingFileField.setText(String.valueOf(settings.getURL()));
+//		TrainingFileField.setText(String.valueOf(settings.getURL()));
 		int iX = TrainingFileField.getX();
 		int iY = TrainingFileField.getY() + TrainingFileField.getHeight();
 
@@ -284,20 +284,20 @@ public class MainWindow extends JPanel {
 		List<Label> labels = new ArrayList<Label>();
 		List<JTextField> fields = new ArrayList<JTextField>();
 		int i = 0;
-		for (String s : settings.map.keySet()) {
-			if (!s.equals(Settings.URL)) {
-				Label label = new Label(s);
-				label.setBounds(iX + settingsBoxWidth + spacing, iY + i * (spacing + settingsBoxHeight),
-						settingsLabelWidth, settingsBoxHeight);
-				labels.add(label);
-				this.add(label);
-				JTextField field = new JTextField(settings.map.get(s));
-				field.setBounds(iX, iY + i * (spacing + settingsBoxHeight), settingsBoxWidth, settingsBoxHeight);
-				fields.add(field);
-				this.add(field);
-				i++;
-			}
-		}
+//		for (String s : settings.map.keySet()) {
+//			if (!s.equals(Settings.URL)) {
+//				Label label = new Label(s);
+//				label.setBounds(iX + settingsBoxWidth + spacing, iY + i * (spacing + settingsBoxHeight),
+//						settingsLabelWidth, settingsBoxHeight);
+//				labels.add(label);
+//				this.add(label);
+//				JTextField field = new JTextField(settings.map.get(s));
+//				field.setBounds(iX, iY + i * (spacing + settingsBoxHeight), settingsBoxWidth, settingsBoxHeight);
+//				fields.add(field);
+//				this.add(field);
+//				i++;
+//			}
+		//}
 		this.settingsLabels = labels;
 		this.settingsTextFields = fields;
 	}
@@ -317,11 +317,11 @@ public class MainWindow extends JPanel {
 
 	protected void prepSettings() {
 		settings = new Settings();
-		settings.set(Settings.URL, this.TrainingFileField.getText());
+//		settings.set(Settings.URL, this.TrainingFileField.getText());
 
 		int i = 0;
 		for (Label label : settingsLabels) {
-			settings.set(label.getText(), settingsTextFields.get(i).getText());
+//			settings.set(label.getText(), settingsTextFields.get(i).getText());
 			i++;
 		}
 	}

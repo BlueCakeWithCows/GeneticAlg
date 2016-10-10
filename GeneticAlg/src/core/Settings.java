@@ -23,7 +23,6 @@ public class Settings {
 	public final SettingsValue<Integer> treeMinLength = new SettingsValue<Integer>(0, "TREE_MIN_LENGTH");
 	public final SettingsValue<Integer> treeMaxLength = new SettingsValue<Integer>(0, "TREE_MAX_LENGTH");
 
-	public final SettingsValue<TestData> testdata = new SettingsValue<TestData>(new TestData(), "TEST_DATA");
 	public final SettingsValue<String> testSelection = new SettingsValue<String>("BLOCK RANDOM",
 			new String[] { "BLOCK RANDOM", "SIMPLE RANDOM", "ALL" }, "TEST_SELECTION_METHOD");
 	public final SettingsValue<Integer> testsPerTreeSize = new SettingsValue<Integer>(0, "TESTS_PER_TREE_SIZE");
@@ -73,30 +72,33 @@ public class Settings {
 		return builder.toString();
 	}
 
-	public class SettingsValue<T> {
-		public T obj;
-		public T[] possibilities;
+	public class SettingsValue<E> {
+		public E obj;
+		public E[] possibilities;
 		public final String ID;
-
-		public SettingsValue(T obj, String ID) {
+		public final Class<?> clas;
+		
+		public SettingsValue(E obj, String ID) {
+			clas = obj.getClass();
 			this.obj = obj;
 			this.ID = ID;
 			settings.add(this);
 		}
 
-		public SettingsValue(T obj, T[] possibilities, String ID) {
+		public SettingsValue(E obj, E[] possibilities, String ID) {
+			clas = obj.getClass();
 			this.obj = obj;
 			this.ID = ID;
 			settings.add(this);
 			this.possibilities = possibilities;
 		}
 
-		public T getValue() {
+		public E getValue() {
 			return obj;
 		}
 
-		public void setValue(T o) {
-			obj = o;
+		public void setValue(Object o) {
+			obj = (E) o;
 		}
 
 		@Override
