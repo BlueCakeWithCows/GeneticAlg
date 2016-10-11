@@ -49,11 +49,14 @@ public class SettingsLoader {
 
 		return settings;
 	}
+	
+	
 
 	public static void save(Settings settings, File file) {
 		try {
-			if (!file.exists())
+			if (!file.exists()) {
 				file.createNewFile();
+			}
 			PrintWriter writer = new PrintWriter(file, "UTF-8");
 
 			for (SettingsValue v : settings.getSettings())

@@ -45,6 +45,7 @@ public class SettingsWindow extends JPanel {
 		chooser.setSelectedFile(new File(defaultSettingsLocation));
 		this.loadSettingsFromFile();
 		if(!chooser.getSelectedFile().exists()){
+			chooser.getSelectedFile().getParentFile().mkdir();
 			this.saveSettingsToFile();
 		}
 
