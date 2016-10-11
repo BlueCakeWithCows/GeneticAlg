@@ -28,4 +28,9 @@ public class ScoredTree {
 
 	public double runningScore;
 
+	public int getOperatorDistance() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

@@ -17,8 +17,10 @@ import components.basic.BasicSelector;
 import components.basic.Conditional;
 import components.basic.Node;
 import components.basic.Tree;
-import components.comparators.FailScoreLengthComparator;
-import components.comparators.ScoreFailLength;
+import components.comparators.Accuracy;
+import components.comparators.FailedTest;
+import components.comparators.LengthScoring;
+import components.comparators.OperatorDistance;
 import components.math.ArithmaticOperators;
 import components.math.ConditionalOperators;
 import components.math.Operator;
@@ -91,63 +93,67 @@ public class Manager {
 	private long seed;
 
 	private void applySettings(Settings settings) {
-		if (random != null || this.seed != settings.getSeed()
-				|| ((random instanceof SecureRandom) != settings.getUseSecureRandom())) {
-			seed = settings.getSeed();
-			if (settings.getUseSecureRandom())
+		if (random == null || this.seed != settings.seed.getValue()
+				|| ((random instanceof SecureRandom) != settings.cryptoRandom.getValue())) {
+			seed = settings.seed.getValue();
+			if (settings.cryptoRandom.getValue())
 				random = new SecureRandom();
 			else
 				random = new Random();
 			random.setSeed(seed);
 		}
 
-		topPercent = settings.getTopPercent();
-		numberOfThreads = settings.getNumberOfThreads();
-		elite = settings.getElite();
+		numberOfThreads = settings.numberOfThreads.getValue();
+		elite = settings.eliteSize.getValue();
 
 		if (nodeSet == null)
 			nodeSet = new ArrayList<Node>();
 		nodeSet.clear();
-		nodeSet.add(new Assignment());
-		if (settings.getUseConditionalNodes())
+
+		if (settings.functionNodes.getValue())
+			nodeSet.add(new Assignment());
+		if (settings.conditionalNodes.getValue())
 			nodeSet.add(new Conditional());
-		// nodeSet.add(new Conditional());
 
 		if (operatorSet == null)
 			operatorSet = new ArrayList<Operator>();
 		operatorSet.clear();
-		if (settings.getUseOperatorArithmatic())
+		if (settings.simpleArithmetricOperators.getValue())
 			operatorSet.addAll(ArithmaticOperators.getArithmaticOperators());
-		if (settings.getUseOperatorConditional())
-			operatorSet.addAll(ConditionalOperators.getConditionalOperators());
+		if (settings.advancedArithmetricOperators.getValue())
+			operatorSet.addAll(ArithmaticOperators.getArithmaticOperators());
+
+		// if (settings.oper)
+		// operatorSet.addAll(ConditionalOperators.getConditionalOperators());
 
 		if (mutator == null)
 			mutator = new Mutator();
-		mutator.setMutationChance(settings.getMutationChance());
+		mutator.setMutationChance(settings.mutationChance.getValue());
 		mutator.setRandom(random);
 		mutator.setOperatorSet(operatorSet);
 		mutator.setNodeSet(nodeSet);
 
-		if (scorer == null)
-			scorer = new ScoreKeeper();
-		if (settings.getUseFailedTestsPrimaryScoring())
-			scorer.setComparator(new FailScoreLengthComparator());
-		else
-			scorer.setComparator(new ScoreFailLength());
+		scorer = new ScoreKeeper();
+		scorer.addComparator(new OperatorDistance(),settings.operationDistanceScoringPriority.getValue());
+		scorer.addComparator(new FailedTest(),settings.failedTestScoringPriority.getValue());
+		scorer.addComparator(new Accuracy(),settings.accuracyScoringPriority.getValue());
+		scorer.addComparator(new LengthScoring(),settings.lengthScoringPriority.getValue());
+
 		scorer.setRandom(random);
-		scorer.setQuickRandom(settings.getQuickRandomTestSelection());
-		scorer.setUsableTestSuitePercent(settings.getTestDataToUse());
-		scorer.setError(settings.getErrorMargin());
-		scorer.setNoPointMark(settings.getNoPointsForErrorAbove());
-		scorer.setMaxTreeSize(settings.getMaxTreeSize());
+		scorer.setQuickRandom(settings.testSelection.getValue());
+		scorer.setUsableTestSuitePercent(settings.testsPerTreeSize.getValue());
+		scorer.setError(settings.errorMarginForScoring.getValue());
+		scorer.setNoPointMark(settings.maxDistanceForAccuracyScoring.getValue());
+		scorer.setMaxTreeSize(settings.treeMaxLength.getValue());
+		scorer.setMinTreeSize(settings.treeMinLength.getValue());
 
 		if (breedingSummary == null)
 			breedingSummary = new BreedingSummary();
-		breedingSummary.elite = settings.getElite();
-		breedingSummary.numberPerPairToSelect = settings.getNumberOfParents();
-		breedingSummary.percentMutateOnly = settings.getPercentToMutateOnly();
-		breedingSummary.percentMixBreed = settings.getSimpleMixBreedPercent();
-		breedingSummary.population = settings.getPopulation();
+		breedingSummary.elite = elite;
+		breedingSummary.numberPerPairToSelect = settings.parentsPerTree.getValue();
+		breedingSummary.percentMutateOnly = settings.mutationOnlyPercent.getValue();
+		breedingSummary.percentMixBreed = settings.simpleBreedPercent.getValue();
+		breedingSummary.population = settings.populationSize.getValue();
 		breedingSummary.recalc();
 
 		if (breeder == null)
@@ -164,9 +170,9 @@ public class Manager {
 		if (builder == null)
 			builder = new TreeBuilder();
 		builder.setRandom(random);
-		builder.setMinTreeSize(settings.getMinInitPop());
-		builder.setMaxTreeSize(settings.getMaxInitPop());
-		builder.setPopulation(settings.getPopulation());
+		builder.setMinTreeSize(settings.initialTreeMinLength.getValue());
+		builder.setMaxTreeSize(settings.initialTreeMaxLength.getValue());
+		builder.setPopulation(settings.populationSize.getValue());
 		builder.setOperatorSet(operatorSet);
 		builder.setNodeSet(nodeSet);
 		builder.setNumberOfInputs(inputSpace);

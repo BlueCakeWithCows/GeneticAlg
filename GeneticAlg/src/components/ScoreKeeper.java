@@ -64,4 +64,8 @@ public class ScoreKeeper extends Scorer {
 			tree.tree.score = tree.runningScore * 100d / scale / cases.size();
 		}
 	}
+
+
+
+
 }

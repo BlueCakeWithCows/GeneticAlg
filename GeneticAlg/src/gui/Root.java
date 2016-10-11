@@ -52,7 +52,7 @@ public class Root extends JFrame {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
 
-		MainWindow panel = new MainWindow();
+		MainWindow panel = new MainWindow(this );
 		panel.init();
 		tabbedPane.addTab("Main", null, panel, null);
 

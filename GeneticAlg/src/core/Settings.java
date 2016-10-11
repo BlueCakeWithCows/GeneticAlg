@@ -18,26 +18,28 @@ public class Settings {
 
 	public final SettingsValue<Long> seed = new SettingsValue<Long>(0l, "SEED");
 
-	public final SettingsValue<Integer> initialTreeMinLength = new SettingsValue<Integer>(0, "INITIAL_TREE_MIN_LENGTH");
-	public final SettingsValue<Integer> initialTreeMaxLength = new SettingsValue<Integer>(0, "INITIAL_TREE_MAX_LENGTH");
+	public final SettingsValue<Integer> initialTreeMinLength = new SettingsValue<Integer>(1, "INITIAL_TREE_MIN_LENGTH");
+	public final SettingsValue<Integer> initialTreeMaxLength = new SettingsValue<Integer>(50, "INITIAL_TREE_MAX_LENGTH");
 	public final SettingsValue<Integer> treeMinLength = new SettingsValue<Integer>(0, "TREE_MIN_LENGTH");
-	public final SettingsValue<Integer> treeMaxLength = new SettingsValue<Integer>(0, "TREE_MAX_LENGTH");
+	public final SettingsValue<Integer> treeMaxLength = new SettingsValue<Integer>(100, "TREE_MAX_LENGTH");
 
-	public final SettingsValue<String> testSelection = new SettingsValue<String>("BLOCK RANDOM",
+	public final SettingsValue<String> testSelection = new SettingsValue<String>("ALL",
 			new String[] { "BLOCK RANDOM", "SIMPLE RANDOM", "ALL" }, "TEST_SELECTION_METHOD");
 	public final SettingsValue<Integer> testsPerTreeSize = new SettingsValue<Integer>(0, "TESTS_PER_TREE_SIZE");
 
-	public final SettingsValue<Integer> numberOfThreads = new SettingsValue<Integer>(0, "NUMBER_OF_THREADS");;
+	public final SettingsValue<Integer> numberOfThreads = new SettingsValue<Integer>(4, "NUMBER_OF_THREADS");;
 
-	public final SettingsValue<Integer> eliteSize = new SettingsValue<Integer>(0, "ELITE_SIZE");;
-	public final SettingsValue<Integer> populationSize = new SettingsValue<Integer>(0, "POPULATION_SIZE");;
+	public final SettingsValue<Integer> eliteSize = new SettingsValue<Integer>(10, "ELITE_SIZE");;
+	public final SettingsValue<Integer> populationSize = new SettingsValue<Integer>(1000, "POPULATION_SIZE");;
 
 	public final SettingsValue<Boolean> cryptoRandom = new SettingsValue<Boolean>(false, "CRYTO_RANDOM");;
 
-	public final SettingsValue<Double> mutationChance = new SettingsValue<Double>(0d, "MUTATION_CHANCE");
+	public final SettingsValue<Double> mutationChance = new SettingsValue<Double>(.05d, "MUTATION_CHANCE");
 
-	public final SettingsValue<Double> mutationOnlyPercent = new SettingsValue<Double>(0d, "MUTATION_ONLY_Percent");
-	public final SettingsValue<Integer> parentsPerTree = new SettingsValue<Integer>(0, "PARENTS_PER_TREE");
+	public final SettingsValue<Double> mutationOnlyPercent = new SettingsValue<Double>(.5d, "MUTATION_ONLY_WEIGHT");
+	public final SettingsValue<Double> simpleBreedPercent = new SettingsValue<Double>(.5d, "SIMPLE_BREED_WEIGHT");
+	
+	public final SettingsValue<Integer> parentsPerTree = new SettingsValue<Integer>(2, "PARENTS_PER_TREE");
 
 	public final SettingsValue<Integer> maxDistanceForAccuracyScoring = new SettingsValue<Integer>(100,
 			"MAX_DISTANCE_FOR_ACCURACY_SCORING");
@@ -58,7 +60,7 @@ public class Settings {
 
 	public final SettingsValue<Boolean> simpleArithmetricOperators = new SettingsValue<Boolean>(true,
 			"SIMPLE_ARITHMETRIC_OPERATORS");
-	public final SettingsValue<Boolean> advancedArithmetricOperators = new SettingsValue<Boolean>(false,
+	public final SettingsValue<Boolean> advancedArithmetricOperators = new SettingsValue<Boolean>(true,
 			"ADVANCED_ARITHMETRIC_OPERATORS");
 
 	@Override

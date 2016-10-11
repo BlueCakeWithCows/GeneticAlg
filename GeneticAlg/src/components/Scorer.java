@@ -7,24 +7,26 @@ import java.util.List;
 import java.util.Random;
 
 import components.basic.Tree;
+import core.Settings.SettingsValue;
 
 public abstract class Scorer {
 
 	private List<TestCase> totalSetOfTests;
 	private double percentOfTestsToUseEachRun;
-	private boolean cheatRandomOnDataPercent;
-	private Comparator<ScoredTree> comparator;
+	private String randomMode;
+	private List<MyComparator> comparator;
 	private Random random;
 
 	public Scorer(List<TestCase> cases, double testDataToUse, Random r) {
 		this.totalSetOfTests = cases;
 		percentOfTestsToUseEachRun = testDataToUse;
 		this.random = r;
-		this.cheatRandomOnDataPercent = false;
+		this.randomMode = "ALL";
+		this.comparator = new ArrayList<MyComparator>();
 	}
 
 	public Scorer() {
-
+		this.comparator = new ArrayList<MyComparator>();
 	}
 
 	public abstract void scoreTree(List<TestCase> cases, ScoredTree tree);
@@ -52,7 +54,8 @@ public abstract class Scorer {
 		List<TestCase> cases;
 
 		// Cheat by using range rather than random ones
-		if (cheatRandomOnDataPercent) {
+		switch (randomMode) {
+		case "BLOCK_RANDOM":
 			double start = random.nextDouble();
 			double end = (start + percentOfTestsToUseEachRun);
 			if (end < 1) {
@@ -66,15 +69,15 @@ public abstract class Scorer {
 				cases.addAll(totalSetOfTests.subList(index1, totalSetOfTests.size()));
 				return cases;
 			}
+		case "SIMPLE_RANDOM":
+			cases = new ArrayList<TestCase>();
+			for (int i = 0; i < totalSetOfTests.size() * percentOfTestsToUseEachRun; i++) {
+				cases.add(totalSetOfTests.get(random.nextInt(totalSetOfTests.size())));
+			}
+			return cases;
+		default:
+			return this.totalSetOfTests;
 		}
-
-		// Pick randomly, repeats allowed
-		cases = new ArrayList<TestCase>();
-		for (int i = 0; i < totalSetOfTests.size() * percentOfTestsToUseEachRun; i++) {
-			cases.add(totalSetOfTests.get(random.nextInt(totalSetOfTests.size())));
-		}
-		return cases;
-
 	}
 
 	public void setRandom(Random random) {
@@ -89,8 +92,8 @@ public abstract class Scorer {
 		this.percentOfTestsToUseEachRun = percent;
 	}
 
-	public void setQuickRandom(boolean cheat) {
-		this.cheatRandomOnDataPercent = cheat;
+	public void setQuickRandom(String string) {
+		this.randomMode = string;
 	}
 
 	public List<Tree> parallelScore(List<Tree> children, int numberOfThreads) {
@@ -144,11 +147,33 @@ public abstract class Scorer {
 	}
 
 	public void sort(List<ScoredTree> newList) {
-		Collections.sort(newList,comparator);
+		Collections.sort(newList, new Comparator<ScoredTree>() {
+
+			@Override
+			public int compare(ScoredTree o1, ScoredTree o2) {
+				for (MyComparator c : comparator) {
+					int i = c.compare(o1, o2);
+					if (i != 0)
+						return i;
+				}
+				return 0;
+			}
+		});
 	}
-	
-	public void setComparator(Comparator<ScoredTree> comparator){
-		this.comparator = comparator;
+
+	public void addComparator(MyComparator c, Integer operationDistanceScoringPriority) {
+		if (operationDistanceScoringPriority != -1) {
+			c.priority = operationDistanceScoringPriority;
+			this.comparator.add(c);
+
+			Collections.sort(this.comparator, new Comparator<MyComparator>() {
+				@Override
+				public int compare(MyComparator o1, MyComparator o2) {
+					return Integer.compare(o1.priority, o2.priority);
+				}
+
+			});
+		}
 	}
 
 	public class ParallelScorer extends Thread implements Runnable {
@@ -166,6 +191,7 @@ public abstract class Scorer {
 			this.newTrees = score(trees, cases);
 		}
 	}
+
 	public double errorMargin = 0d;
 	public double aboveThisNoScorePoints = 100;
 	public double lowest = 0d;
@@ -177,7 +203,13 @@ public abstract class Scorer {
 	public void setError(double errorMargin2) {
 		this.errorMargin = errorMargin2;
 	}
+
 	public void setMaxTreeSize(int maxTreeSize) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void setMinTreeSize(Integer value) {
 		// TODO Auto-generated method stub
 
 	}

@@ -25,10 +25,8 @@ import core.SimpleSaveLoad;
 
 public class MainWindow extends JPanel {
 
-	private JTextField currentSettingsFileTextField;
 	private JFileChooser chooser;
 	private File trainingFile;
-	private JButton saveSettingsToFileButton;
 	private JButton generateInitialPopulationButton;
 	private JTextField TrainingFileField;
 	private JTextArea generationDisplayTextArea;
@@ -38,47 +36,22 @@ public class MainWindow extends JPanel {
 	private JTextField UntilField;
 	private JTextField RunsField;
 	Button runGenerationsButton;
-	private Settings settings;
 	private Manager manager;
 	private Button stopRunningButton;
 	private JButton selectTrainingFileButton;
 	public final int START_BUTTON_Y = 500;
 	private boolean stopRequested = false;
 	private JTextField TestDataToUse;
+	private Root root;
 
-	public MainWindow() {
+	public MainWindow(Root root) {
 		this.setFocusCycleRoot(true);
 		this.setBorder(new EmptyBorder(5, 5, 5, 5));
 		this.setLayout(null);
+		this.root = root;
 	}
 
 	public void init() {
-		JButton loadSettingsButton = new JButton("...");
-		loadSettingsButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				chooser.showOpenDialog(null);
-				File file = chooser.getSelectedFile();
-				if (file != null) {
-					currentSettingsFileTextField.setText(file.getAbsolutePath());
-//					try {
-//						settings = SettingsLoader.loadSettingsFrom(file);
-//						copyFromSettings();
-//					} catch (IOException e1) {
-//						e1.printStackTrace();
-//					}
-				}
-			}
-
-		});
-
-		loadSettingsButton.setBounds(332, 16, 24, 27);
-		this.add(loadSettingsButton);
-
-		currentSettingsFileTextField = new JTextField();
-		currentSettingsFileTextField.setBounds(15, 16, 319, 27);
-		currentSettingsFileTextField.setColumns(10);
-		currentSettingsFileTextField.setEditable(false);
-		this.add(currentSettingsFileTextField);
 
 		TrainingFileField = new JTextField();
 		TrainingFileField.setBounds(15, 50, 319, 27);
@@ -89,10 +62,9 @@ public class MainWindow extends JPanel {
 		generateInitialPopulationButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				prepSettings();
 				CaseReader reader = new CaseReader(trainingFile);
 				try {
-					manager = new Manager(settings, reader.getTestCases());
+					manager = new Manager(root.settings, reader.getTestCases());
 					manager.generatePopulation();
 					manager.scorePopulation();
 					displayScore(5);
@@ -104,21 +76,6 @@ public class MainWindow extends JPanel {
 		});
 		generateInitialPopulationButton.setBounds(0, START_BUTTON_Y, 206, 29);
 		this.add(generateInitialPopulationButton);
-
-		saveSettingsToFileButton = new JButton("Save Settings");
-		saveSettingsToFileButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				chooser.showSaveDialog(null);
-				File file = chooser.getSelectedFile();
-				prepSettings();
-				if (file != null) {
-//					settings.save(file);
-				}
-			}
-		});
-		saveSettingsToFileButton.setBounds(0,
-				generateInitialPopulationButton.getHeight() + generateInitialPopulationButton.getY(), 206, 29);
-		this.add(saveSettingsToFileButton);
 
 		generationDisplayTextArea = new JTextArea("hello");
 		generationDisplayTextArea.setFocusTraversalKeysEnabled(false);
@@ -235,14 +192,6 @@ public class MainWindow extends JPanel {
 		File files = new File(chooser.getCurrentDirectory().getPath() + "/_BlueGeneticProgramming");
 		files.mkdir();
 		chooser.setCurrentDirectory(files);
-
-		File defT = new File(files.getAbsolutePath() + "/default.txt");
-//		try {
-////			settings = new Settings(SimpleSaveLoad.load(defT));
-////			setFile(settings.getURL());
-//		} catch (IOException e2) {
-//		}
-		this.copyFromSettings();
 	}
 
 	public void setFile(String url) {
@@ -273,35 +222,6 @@ public class MainWindow extends JPanel {
 	private List<Label> settingsLabels;
 	private List<JTextField> settingsTextFields;
 
-	protected void copyFromSettings() {
-		if (settings == null)
-			return;
-//		TrainingFileField.setText(String.valueOf(settings.getURL()));
-		int iX = TrainingFileField.getX();
-		int iY = TrainingFileField.getY() + TrainingFileField.getHeight();
-
-		cleanSettingsFields();
-		List<Label> labels = new ArrayList<Label>();
-		List<JTextField> fields = new ArrayList<JTextField>();
-		int i = 0;
-//		for (String s : settings.map.keySet()) {
-//			if (!s.equals(Settings.URL)) {
-//				Label label = new Label(s);
-//				label.setBounds(iX + settingsBoxWidth + spacing, iY + i * (spacing + settingsBoxHeight),
-//						settingsLabelWidth, settingsBoxHeight);
-//				labels.add(label);
-//				this.add(label);
-//				JTextField field = new JTextField(settings.map.get(s));
-//				field.setBounds(iX, iY + i * (spacing + settingsBoxHeight), settingsBoxWidth, settingsBoxHeight);
-//				fields.add(field);
-//				this.add(field);
-//				i++;
-//			}
-		//}
-		this.settingsLabels = labels;
-		this.settingsTextFields = fields;
-	}
-
 	public void cleanSettingsFields() {
 		if (settingsLabels != null)
 			for (Label l : settingsLabels) {
@@ -313,16 +233,5 @@ public class MainWindow extends JPanel {
 			}
 		settingsTextFields = new ArrayList<JTextField>();
 		settingsLabels = new ArrayList<Label>();
-	}
-
-	protected void prepSettings() {
-		settings = new Settings();
-//		settings.set(Settings.URL, this.TrainingFileField.getText());
-
-		int i = 0;
-		for (Label label : settingsLabels) {
-//			settings.set(label.getText(), settingsTextFields.get(i).getText());
-			i++;
-		}
 	}
 }
