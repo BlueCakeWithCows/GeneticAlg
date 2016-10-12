@@ -1,7 +1,11 @@
 package operationdistance;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import components.math.Value;
 
 public class Algorithm {
 
@@ -10,7 +14,7 @@ public class Algorithm {
 
 	}
 
-	protected HashSet<Integer> initialArgs;
+	protected Collection<? extends Integer> initialArgs;
 	protected Set<Integer> args;
 	protected Set<Integer> oneStepMoves;
 	protected Set<Integer> twoStepMoves;
@@ -20,12 +24,12 @@ public class Algorithm {
 	public void setDebug(boolean b){
 		this.debug =b ;
 	}
-	public void setArgs(HashSet<Integer> set) {
-		this.initialArgs = set;
+	public void setArgs(Collection<? extends Integer> list) {
+		this.initialArgs = list;
 	}
 
 	public void setTarget(int number) {
-		this.setTarget = number;
+		this.setTarget = Math.abs(number);
 	}
 
 	public int run() {
@@ -42,7 +46,6 @@ public class Algorithm {
 		twoStepMoves = new HashSet<Integer>();
 		for (Integer i : args) {
 			addToNSet(i, args, this.oneStepMoves);
-			addToNSet(i, args, this.twoStepMoves);
 		}
 	}
 

@@ -4,7 +4,6 @@ public class AdvancedDivisorAlgorithm extends Algorithm {
 	@Override
 	protected int solve(int y, int level) {
 		level += 1;
-		int o = 0;
 		if (this.oneStepMoves.contains(y)) {
 			if (debug)
 				System.out.println("One Step to " + y + "|L:" + level);
@@ -15,16 +14,19 @@ public class AdvancedDivisorAlgorithm extends Algorithm {
 				System.out.println("Two steps to " + y + "|L:" + level);
 			return 2;
 		}
+		int o = 0;
+
 		int[] divisorMultipleRemainder = MyMathUtils.getDivisorAndNearestMultiple(y, args);
 		int divisor = divisorMultipleRemainder[0];
 		int multiple = divisorMultipleRemainder[1];
 		int remainder = divisorMultipleRemainder[2];
 		if (!args.contains(multiple))
 			o += this.solve(multiple, level);
-		this.addNumber(multiple);
+		args.add(multiple);
+		
 		if (!args.contains(remainder))
 			o += this.solve(remainder, level);
-		this.addNumber(remainder);
+		args.add(remainder);
 		if (remainder != 0)
 			o++;
 		if (multiple != 1)

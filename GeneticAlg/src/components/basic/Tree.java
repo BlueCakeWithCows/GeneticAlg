@@ -1,7 +1,9 @@
 package components.basic;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -19,16 +21,17 @@ public class Tree {
 	private HashMap<String, Value> constants;
 	public int outputSize;
 	public int inputSize;
+	public double operationDistance;
 	public Double[] outputs;
 
-	public List<Value> getValues(){
+	public List<Value> getValues() {
 		List<Value> values = new ArrayList<Value>();
 		values.addAll(variables.values());
 		values.addAll(this.values.values());
 		values.addAll(variables.values());
 		return values;
 	}
-	
+
 	public Tree(int inp, int out) {
 		points = new ArrayList<Node>();
 		outputSize = out;
@@ -36,8 +39,10 @@ public class Tree {
 		variables = new HashMap<String, Value>();
 		values = new HashMap<String, Value>();
 		constants = new HashMap<String, Value>();
+		constants.put("0", new Value(0));
+		constants.put("1", new Value(1));
+		constants.put("2", new Value(2));
 	}
-
 
 	public Double[] execute(double[] inputs) {
 		values.clear();
@@ -128,7 +133,7 @@ public class Tree {
 	@Override
 	public String toString() {
 		StringBuilder s = new StringBuilder();
-		s.append("Failed Tests: " + failedTests + " of " + totalTests + " ");
+		s.append("Failed Tests: " + failedTests + " of " + totalTests + " Ops: "+this.operationDistance);
 		s.append("Score: " + score + System.lineSeparator());
 		for (Node p : points) {
 			s.append(p.toString() + System.lineSeparator());
@@ -153,6 +158,14 @@ public class Tree {
 
 	public int simpleSize() {
 		return points.size();
+	}
+
+	public Collection<? extends Integer> getValuesAsSet() {
+		HashSet<Integer> s = new HashSet<Integer>();
+		for (Value v : this.getValues()) {
+			s.add(v.getInt());
+		}
+		return s;
 	}
 
 }

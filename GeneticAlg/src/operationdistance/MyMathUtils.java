@@ -24,7 +24,7 @@ public class MyMathUtils {
 		int steps = 3;
 		float distance = Float.MAX_VALUE;
 		for (Integer i : args) {
-			if (i != 0 && i != 1) {
+			if (i != 0 && i != 1 && i !=-1) {
 				int c = Math.round((float) y / (float) i);
 
 				int d = y - c * i;

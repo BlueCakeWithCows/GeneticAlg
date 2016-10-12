@@ -11,26 +11,24 @@ public class SmallTrialClass {
 	public static void main(String[] args) {
 		double advancedTime = 0, simpleTime = 0;
 		double advancedScore = 0, simpleScore = 0;
-		int goal = 333;
+		int goal = 63;
 		HashSet<Integer> set = new HashSet<Integer>();
-		set.addAll(Arrays.asList(new Integer[]{0,1,2,26,333,108}));
+		set.addAll(Arrays.asList(new Integer[] { 0, 1, 2, 26, -1 }));
+		SimpleDivisorAlgorithm simple = new SimpleDivisorAlgorithm();
+		simple.setDebug(true);
+		double[] si = testAlg(simple, goal, set);
 
+		simpleTime += si[0];
+		simpleScore += si[1];
+
+		System.out.println("[Simple] Time:" + simpleTime + "|Average:" + simpleScore);
 		AdvancedDivisorAlgorithm advanced = new AdvancedDivisorAlgorithm();
+
 		advanced.setDebug(true);
 		double[] ad = testAlg(advanced, goal, set);
 		advancedTime += ad[0];
 		advancedScore += ad[1];
 		System.out.println("[Advanced] Time:" + advancedTime + "|Average:" + advancedScore);
-		
-		SimpleDivisorAlgorithm simple = new SimpleDivisorAlgorithm();
-		simple.setDebug(true);
-		double[] si = testAlg(simple, goal, set);
-		
-		simpleTime += si[0];
-		simpleScore += si[1];
-
-		System.out.println("[Simple] Time:" + simpleTime + "|Average:" + simpleScore );
-
 	}
 
 	private static double[] testAlg(Algorithm simple, int goal, HashSet<Integer> set) {

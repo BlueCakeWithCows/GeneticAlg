@@ -4,7 +4,7 @@ public class SimpleDivisorAlgorithm extends Algorithm {
 	@Override
 	protected int solve(int y, int level) {
 		level += 1;
-
+		
 		if (this.oneStepMoves.contains(y)) {
 			if (debug)
 				System.out.println("One Step to " + y + "|L:" + level);
@@ -24,6 +24,7 @@ public class SimpleDivisorAlgorithm extends Algorithm {
 		if (!args.contains(multiple))
 			o += this.solve(multiple, level);
 		args.add(multiple);
+		
 		if (!args.contains(remainder))
 			o += this.solve(remainder, level);
 		args.add(remainder);
