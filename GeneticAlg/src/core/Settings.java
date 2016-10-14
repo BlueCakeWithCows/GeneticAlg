@@ -63,6 +63,10 @@ public class Settings {
 	public final SettingsValue<Boolean> advancedArithmetricOperators = new SettingsValue<Boolean>(true,
 			"ADVANCED_ARITHMETRIC_OPERATORS");
 
+		public final SettingsValue<Boolean> rotateScoring = new SettingsValue<Boolean>(false,
+			"ROTATE_SCORING");
+
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

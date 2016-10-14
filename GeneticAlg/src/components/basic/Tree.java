@@ -1,5 +1,6 @@
 package components.basic;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ public class Tree {
 		List<Value> values = new ArrayList<Value>();
 		values.addAll(variables.values());
 		values.addAll(this.values.values());
-		values.addAll(variables.values());
+		values.addAll(constants.values());
 		return values;
 	}
 
@@ -42,6 +43,7 @@ public class Tree {
 		constants.put("0", new Value(0));
 		constants.put("1", new Value(1));
 		constants.put("2", new Value(2));
+		constants.put("100", new Value(100));
 	}
 
 	public Double[] execute(double[] inputs) {
@@ -57,6 +59,7 @@ public class Tree {
 
 		values.putAll(constants);
 		simulate(this);
+		
 		for (int i = 0; i < outputs.length; i++)
 			outputs[i] = variables.get(formatOut(i)).getDouble();
 
@@ -133,7 +136,7 @@ public class Tree {
 	@Override
 	public String toString() {
 		StringBuilder s = new StringBuilder();
-		s.append("Failed Tests: " + failedTests + " of " + totalTests + " Ops: "+this.operationDistance);
+		s.append("Failed Tests: " + 	failedTests + " of " + totalTests + " Ops: "+NumberFormat.getInstance().format(this.operationDistance));
 		s.append("Score: " + score + System.lineSeparator());
 		for (Node p : points) {
 			s.append(p.toString() + System.lineSeparator());
@@ -164,6 +167,8 @@ public class Tree {
 		HashSet<Integer> s = new HashSet<Integer>();
 		for (Value v : this.getValues()) {
 			s.add(v.getInt());
+			if(v.getInt() != v.getDouble())
+				return null;
 		}
 		return s;
 	}

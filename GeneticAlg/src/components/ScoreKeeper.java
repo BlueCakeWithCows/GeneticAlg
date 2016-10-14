@@ -1,6 +1,7 @@
 package components;
 
 import java.security.SecureRandom;
+import java.util.Collection;
 import java.util.List;
 
 import operationdistance.AdvancedDivisorAlgorithm;
@@ -31,9 +32,9 @@ public class ScoreKeeper extends Scorer {
 			tree.normaled = new boolean[c.out.length];
 			SimpleDivisorAlgorithm alg1 = new SimpleDivisorAlgorithm();
 			AdvancedDivisorAlgorithm alg2 = new AdvancedDivisorAlgorithm();
-
-			alg1.setArgs(tree.tree.getValuesAsSet());
-			alg2.setArgs(tree.tree.getValuesAsSet());
+			Collection<? extends Integer> set = tree.tree.getValuesAsSet();
+			alg1.setArgs(set);
+			alg2.setArgs(set);
 			for (int i = 0; i < c.out.length; i++) {
 				tree.normaled[i] = true;
 
@@ -41,14 +42,14 @@ public class ScoreKeeper extends Scorer {
 					tree.tempScores[i] = 0;
 				} else if (c.out[i] == null && results[i] != null) {
 					tree.tempScores[i] = aboveThisNoScorePoints;
-					tree.tree.operationDistance +=30;
-					
+					tree.tree.operationDistance += 30;
+
 				} else if (results[i] == null) {
 					tree.tempScores[i] = aboveThisNoScorePoints;
-					tree.tree.operationDistance +=30;
+					tree.tree.operationDistance += 30;
 				} else if (Double.isInfinite(results[i]) || Double.isNaN(results[i])) {
 					tree.tempScores[i] = aboveThisNoScorePoints;
-					tree.tree.operationDistance +=30;
+					tree.tree.operationDistance += 30;
 				} else {
 					double error = Math.abs(results[i] - c.out[i]);
 					if (error < .01)
@@ -59,10 +60,14 @@ public class ScoreKeeper extends Scorer {
 					tree.tempScores[i] = scaledForm;
 
 					if (error != 0) {
-						alg1.setTarget(Math.abs(c.out[i].intValue()));
-						alg2.setTarget(Math.abs(c.out[i].intValue()));
-						alg1.setDebug(true);
-						tree.tree.operationDistance += Math.min(alg1.run(), alg2.run());
+						if (set != null) {
+							alg1.setTarget(Math.abs(c.out[i].intValue()));
+							alg2.setTarget(Math.abs(c.out[i].intValue()));
+							double d = Math.min(alg1.run(), alg2.run());
+							tree.tree.operationDistance += Math.min(alg1.run(), alg2.run());
+						}else{
+							tree.tree.operationDistance+=30;
+						}
 					}
 				}
 				tree.runningScore += tree.tempScores[i];
@@ -86,4 +91,6 @@ public class ScoreKeeper extends Scorer {
 		tree.tree.operationDistance = tree.tree.operationDistance / tests;
 		tree.tree.score = tree.tree.score;
 	}
+
+
 }

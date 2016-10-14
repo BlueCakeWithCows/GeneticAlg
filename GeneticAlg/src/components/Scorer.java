@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 import components.basic.Tree;
+import components.comparators.LengthScoring;
 import core.Settings.SettingsValue;
 
 public abstract class Scorer {
@@ -16,6 +17,14 @@ public abstract class Scorer {
 	private String randomMode;
 	private List<MyComparator> comparator;
 	private Random random;
+
+	public void switchComparator() {
+		MyComparator first = comparator.get(0);
+		comparator.remove(0);
+		comparator.add(first);
+		System.out.println(comparator.get(0));
+		//Priorites will be fucked to hell
+	}
 
 	public Scorer(List<TestCase> cases, double testDataToUse, Random r) {
 		this.totalSetOfTests = cases;

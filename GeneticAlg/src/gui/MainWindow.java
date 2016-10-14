@@ -27,7 +27,7 @@ public class MainWindow extends JPanel {
 
 	private JFileChooser chooser;
 	private File trainingFile;
-	private JButton generateInitialPopulationButton;
+	private JButton generateInitialPopulationButton, uSettings;
 	private JTextField TrainingFileField;
 	private JTextArea generationDisplayTextArea;
 	private Label generationCounterLabel;
@@ -76,6 +76,17 @@ public class MainWindow extends JPanel {
 		});
 		generateInitialPopulationButton.setBounds(0, START_BUTTON_Y, 206, 29);
 		this.add(generateInitialPopulationButton);
+
+		uSettings = new JButton("Update Settings");
+		uSettings.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (manager != null)
+					manager.applySettings(root.settings);
+			}
+
+		});
+		uSettings.setBounds(0, START_BUTTON_Y + 40, 206, 29);
+		this.add(uSettings);
 
 		generationDisplayTextArea = new JTextArea("hello");
 		generationDisplayTextArea.setFocusTraversalKeysEnabled(false);

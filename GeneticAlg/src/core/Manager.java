@@ -46,6 +46,7 @@ public class Manager {
 		return children.get(0);
 	}
 
+	
 	public void doGeneration() {
 		long time = System.currentTimeMillis();
 		if (!scored)
@@ -61,8 +62,32 @@ public class Manager {
 		scorePopulation();
 		this.totalRunTime += (System.currentTimeMillis() - time) / 1000d;
 		generation++;
+		if(rotate){
+			rotate();
+		}
 	}
 
+	private int counter = 0;
+	double lastScore = 0;
+	private int failed = 0;
+	double distance = 0;
+
+	private void rotate(){
+		if (this.getBest().score == lastScore && this.getBest().failedTests == failed
+				&& this.getBest().operationDistance == distance) {
+			counter++;
+		} else {
+			counter = 0;
+		}
+		if (counter > 10) {
+			scorer.switchComparator();
+			counter = 0;
+		}
+		lastScore = this.getBest().score;
+		failed=this.getBest().failedTests;
+		distance = this.getBest().operationDistance;
+	}
+	
 	public List<Tree> shaveExcess(Tree[][] trees) {
 		List<Tree> newList = new ArrayList<Tree>(trees.length);
 		for (Tree[] t : trees) {
@@ -82,17 +107,19 @@ public class Manager {
 		children = builder.generateTrees();
 	}
 
+	List<TestCase> cases;
+
 	public Manager(Settings settings, List<TestCase> cases) {
 		children = new ArrayList<Tree>();
 		this.inputSpace = cases.get(0).input.length;
 		this.outputSpace = cases.get(0).out.length;
+		this.cases = cases;
 		this.applySettings(settings);
-		this.scorer.setTestSuite(cases);
 	}
 
 	private long seed;
 
-	private void applySettings(Settings settings) {
+	public void applySettings(Settings settings) {
 		if (random == null || this.seed != settings.seed.getValue()
 				|| ((random instanceof SecureRandom) != settings.cryptoRandom.getValue())) {
 			seed = settings.seed.getValue();
@@ -103,6 +130,8 @@ public class Manager {
 			random.setSeed(seed);
 		}
 
+		rotate = settings.rotateScoring.getValue();
+		
 		numberOfThreads = settings.numberOfThreads.getValue();
 		elite = settings.eliteSize.getValue();
 
@@ -134,10 +163,10 @@ public class Manager {
 		mutator.setNodeSet(nodeSet);
 
 		scorer = new ScoreKeeper();
-		scorer.addComparator(new OperatorDistance(),settings.operationDistanceScoringPriority.getValue());
-		scorer.addComparator(new FailedTest(),settings.failedTestScoringPriority.getValue());
-		scorer.addComparator(new Accuracy(),settings.accuracyScoringPriority.getValue());
-		scorer.addComparator(new LengthScoring(),settings.lengthScoringPriority.getValue());
+		scorer.addComparator(new OperatorDistance(), settings.operationDistanceScoringPriority.getValue());
+		scorer.addComparator(new FailedTest(), settings.failedTestScoringPriority.getValue());
+		scorer.addComparator(new Accuracy(), settings.accuracyScoringPriority.getValue());
+		scorer.addComparator(new LengthScoring(), settings.lengthScoringPriority.getValue());
 
 		scorer.setRandom(random);
 		scorer.setQuickRandom(settings.testSelection.getValue());
@@ -146,6 +175,7 @@ public class Manager {
 		scorer.setNoPointMark(settings.maxDistanceForAccuracyScoring.getValue());
 		scorer.setMaxTreeSize(settings.treeMaxLength.getValue());
 		scorer.setMinTreeSize(settings.treeMinLength.getValue());
+		scorer.setTestSuite(cases);
 
 		if (breedingSummary == null)
 			breedingSummary = new BreedingSummary();
@@ -182,7 +212,7 @@ public class Manager {
 
 	private int generation;
 	private boolean scored = false;
-
+	private boolean rotate = false;
 	private Random random;
 	private Mutator mutator;
 	private ScoreKeeper scorer;
