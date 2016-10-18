@@ -1,8 +1,12 @@
 package swarm.layers;
 
+import java.security.acl.Owner;
+
+import swarm.Particle;
+
 public abstract class Layer {
 	private final Layer parent;
-	private String location;
+	protected String location;
 
 	public Layer getParent() {
 		return parent;
@@ -18,7 +22,7 @@ public abstract class Layer {
 		}
 	}
 
-	public abstract double solve(double[] inputs);
+	public abstract double solve(double[] inputs, Particle o);
 
 	public String getLocation() {
 		return location;

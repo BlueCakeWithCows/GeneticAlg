@@ -1,16 +1,14 @@
 package swarm;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
+
+import swarm.dimensions.BinaryDimension;
 
 public class Particle {
-
-	// A = ADD, B = SUBTRACT, C = MULTIPLY, D = DIVIDE
-	// 0 = Terminating, 1 = Function
-	// # Index
-	// # Value
-	// So, 1A0, Binary(Function),Addition,Binary(Terminating),4 (4th arg), 0
-	// (value)
-
+	Random r;
+	
 	public HashMap<String, Dimension> map;
 
 	public Particle() {
@@ -18,8 +16,32 @@ public class Particle {
 	}
 
 	private void solve(double[] inputs) {
-		
-		
-		
+
+	}
+
+	public double get(String location, Class<? extends Dimension> class1) {
+		if (!map.containsKey(location)) {
+			Dimension d = null;
+			try {
+				d = class1.newInstance();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			d.gen(r);
+			map.put(location, d);
+		}
+		return map.get(location).getValue();
+	}
+
+	public List<Function> getFunctions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public int getInSize() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

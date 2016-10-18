@@ -1,5 +1,7 @@
 package swarm;
 
+import java.util.Random;
+
 public abstract class Dimension {
 
 	private String location;
@@ -49,5 +51,10 @@ public abstract class Dimension {
 
 	public void setValue(double v) {
 		value = constrain(v);
+	}
+
+	public void gen(Random r) {
+		// TODO Auto-generated method stub
+		
 	}
 }
