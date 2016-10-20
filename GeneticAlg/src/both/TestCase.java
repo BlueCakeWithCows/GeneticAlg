@@ -1,4 +1,4 @@
-package genetic.components;
+package both;
 
 public class TestCase {
 	public Double[] out;

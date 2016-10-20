@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
+import both.TestCase;
 import genetic.components.basic.Tree;
 
 public abstract class Scorer {

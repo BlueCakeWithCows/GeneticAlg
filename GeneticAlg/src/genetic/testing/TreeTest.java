@@ -2,9 +2,9 @@ package genetic.testing;
 
 import java.util.Arrays;
 
+import both.TestCase;
 import genetic.components.ScoreKeeper;
 import genetic.components.ScoredTree;
-import genetic.components.TestCase;
 import genetic.components.basic.Assignment;
 import genetic.components.basic.Tree;
 import genetic.components.math.ArithmaticOperators;

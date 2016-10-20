@@ -1,4 +1,4 @@
-package genetic.core;
+package both;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

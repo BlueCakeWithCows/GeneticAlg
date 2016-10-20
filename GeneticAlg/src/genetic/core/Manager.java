@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import both.TestCase;
 import genetic.components.Breeder;
 import genetic.components.BreedingSummary;
 import genetic.components.Mutator;
 import genetic.components.ScoreKeeper;
-import genetic.components.TestCase;
 import genetic.components.basic.Assignment;
 import genetic.components.basic.BasicSelector;
 import genetic.components.basic.Conditional;

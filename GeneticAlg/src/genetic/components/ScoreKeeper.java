@@ -4,6 +4,7 @@ import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.List;
 
+import both.TestCase;
 import genetic.operationdistance.AdvancedDivisorAlgorithm;
 import genetic.operationdistance.SimpleDivisorAlgorithm;
 

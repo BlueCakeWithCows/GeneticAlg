@@ -20,7 +20,7 @@ public class FunctionLayer extends Layer {
 	@Override
 	public double solve(double[] inputs, Particle part) {
 		double dub = 0;
-		for (int i = 0; i < functionList.length; i++) {
+		for (int i = 0; i < functionList.length; i++																) {
 			dub += functionList[i].solve(inputs, part);
 		}
 		return dub;

@@ -5,19 +5,31 @@ import java.util.List;
 import java.util.Random;
 
 import swarm.dimensions.BinaryDimension;
+import swarm.layers.BinaryLayer;
 
 public class Particle {
-	Random r;
-	
-	public HashMap<String, Dimension> map;
+	private Random rand;
 
-	public Particle() {
+	public HashMap<String, Dimension> map;
+	public BinaryLayer layer;
+
+	private int inputSize;
+	
+	public Particle(int inputSize) {
 		map = new HashMap<String, Dimension>(32);
+		rand = new Random();
+		this.inputSize = inputSize;
+		layer = new BinaryLayer(null, 0);
 	}
 
 	private void solve(double[] inputs) {
-
+		layer.solve(inputs, this);
 	}
+	
+	public void score(){
+		
+	}
+	
 
 	public double get(String location, Class<? extends Dimension> class1) {
 		if (!map.containsKey(location)) {
@@ -29,7 +41,7 @@ public class Particle {
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			}
-			d.gen(r);
+			d.gen(rand);
 			map.put(location, d);
 		}
 		return map.get(location).getValue();
@@ -41,7 +53,6 @@ public class Particle {
 	}
 
 	public int getInSize() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.inputSize;
 	}
 }

@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import both.TestCase;
+
 public class CaseReader {
 	private File file;
 	private ArrayList<String> lines;
