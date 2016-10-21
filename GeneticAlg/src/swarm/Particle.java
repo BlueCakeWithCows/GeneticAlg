@@ -4,32 +4,38 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import swarm.dimensions.BinaryDimension;
+import both.TestCase;
 import swarm.layers.BinaryLayer;
 
 public class Particle {
 	private Random rand;
+	private double score;
 
 	public HashMap<String, Dimension> map;
 	public BinaryLayer layer;
-
+	private List<Function> functions;
 	private int inputSize;
-	
-	public Particle(int inputSize) {
+
+	public Particle(int inputSize, List<Function> functions, Random random) {
 		map = new HashMap<String, Dimension>(32);
-		rand = new Random();
+		rand = random;
 		this.inputSize = inputSize;
+		this.functions = functions;
 		layer = new BinaryLayer(null, 0);
+
 	}
 
-	private void solve(double[] inputs) {
-		layer.solve(inputs, this);
+	private double solve(double[] inputs) {
+		return layer.solve(inputs, this);
 	}
-	
-	public void score(){
-		
+
+	public void score(TestCase[] cases) {
+		double score = 0;
+		for (TestCase c : cases) {
+			score += Math.abs(c.out[0] - this.solve(c.input));
+		}
+		this.score = score;
 	}
-	
 
 	public double get(String location, Class<? extends Dimension> class1) {
 		if (!map.containsKey(location)) {
@@ -48,8 +54,11 @@ public class Particle {
 	}
 
 	public List<Function> getFunctions() {
-		// TODO Auto-generated method stub
-		return null;
+		return functions;
+	}
+
+	public double getScore() {
+		return this.score;
 	}
 
 	public int getInSize() {
