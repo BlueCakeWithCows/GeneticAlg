@@ -5,10 +5,9 @@ import swarm.Particle;
 
 public class SubFunctionLayer extends Layer {
 	public SubFunctionLayer(Layer parent, Function function) {
-		super(parent, function.getSymbol());
+		super(parent, function.toString());
 		this.function = function;
 		layers = new BinaryLayer[function.getInputSize()];
-		// TODO Auto-generated constructor stub
 	}
 
 	private Function function;
@@ -23,5 +22,15 @@ public class SubFunctionLayer extends Layer {
 			vals[i] = layers[i].solve(inputs, o);
 		}
 		return function.solve(vals);
+	}
+
+	public String getString(Particle particle) {
+		String s = "[";
+		s += function.toString();
+		for (int i = 0; i < layers.length; i++) {
+			s += "," + layers[i].getString(particle);
+		}
+		s += "]";
+		return s;
 	}
 }

@@ -1,36 +1,36 @@
 package swarm;
 
-import genetic.components.math.ArithmaticOperators;
-import genetic.components.math.InvalidValueException;
-import genetic.components.math.Value;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Function {
 
 	public int getInputSize() {
-		// TODO Auto-generated method stub
 		return 2;
 	}
 
-	public double solve(double[] vals) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	public abstract double solve(double[] vals);
 
-	public String getSymbol() {
-		// TODO Auto-generated method stub
-		return null;
+	public abstract String toString();
+
+	private static List<Function> functions;
+
+	public static List<Function> getFunctions() {
+		if (functions == null) {
+			functions = new ArrayList<Function>();
+			functions.add(new Addition());
+			functions.add(new Subtraction());
+			functions.add(new Multiplication());
+			functions.add(new Division());
+		}
+		return functions;
 	}
 
 	public static class Addition extends Function {
 
 		@Override
-		public double solve(v) throws InvalidValueException {
-			try {
-				return new Value(v[0].getDouble() + v[1].getDouble());
-			} catch (Exception e) {
-
-			}
-			return new Value(0);
+		public double solve(double[] vals) {
+			return vals[0] + vals[1];
 		}
 
 		@Override
@@ -42,13 +42,8 @@ public abstract class Function {
 
 	public static class Subtraction extends Function {
 		@Override
-		public Value compute(Value[] v) throws InvalidValueException {
-			try {
-				return new Value(v[0].getDouble() - v[1].getDouble());
-			} catch (Exception e) {
-
-			}
-			return new Value(0);
+		public double solve(double[] vals) {
+			return vals[0] - vals[1];
 		}
 
 		@Override
@@ -59,13 +54,8 @@ public abstract class Function {
 
 	public static class Multiplication extends Function {
 		@Override
-		public Value compute(Value[] v) throws InvalidValueException {
-			try {
-				return new Value(v[0].getDouble() * v[1].getDouble());
-			} catch (Exception e) {
-
-			}
-			return new Value(0);
+		public double solve(double[] vals) {
+			return vals[0] * vals[1];
 		}
 
 		@Override
@@ -76,12 +66,8 @@ public abstract class Function {
 
 	public static class Division extends Function {
 		@Override
-		public Value compute(Value[] v) throws InvalidValueException {
-			try {
-				return new Value(v[0].getDouble() / v[1].getDouble());
-			} catch (Exception e) {
-			}
-			return new Value(0);
+		public double solve(double[] vals) {
+			return vals[0] / vals[1];
 		}
 
 		@Override

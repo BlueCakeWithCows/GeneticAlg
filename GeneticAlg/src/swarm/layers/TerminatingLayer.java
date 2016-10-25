@@ -2,6 +2,7 @@ package swarm.layers;
 
 import swarm.Dimension;
 import swarm.Particle;
+import swarm.dimensions.DoubleDimension;
 
 public class TerminatingLayer extends Layer {
 
@@ -20,5 +21,19 @@ public class TerminatingLayer extends Layer {
 		}
 		value += o.get(location + (inputsize), Dimension.class);
 		return value;
+	}
+
+	public String getString(Particle particle) {
+		String s = "{";
+		for (int i = 0; i < inputsize; i++) {
+			double value = particle.get(location + i, DoubleDimension.class);
+			if (value != 0) {
+				if (s.length() > 1)
+					s += "+";
+				s += particle.df.format(value) + "*" + i;
+			}
+		}
+		s += "}";
+		return s;
 	}
 }

@@ -4,37 +4,13 @@ import java.util.Random;
 
 public abstract class Dimension {
 
-	private String location;
-	private String parent;
-	private Integer type;
-
-	public static final int Binary = 0, Function = 1, Terminating = 2;
-
-	public Dimension(Dimension d, int index, int type) {
-
-		if (parent != null) {
-			parent = d.getLoc();
-		} else {
-			parent = "";
-		}
-		location = parent + "[" + index + type + "]";
+	public Dimension(Random r) {
+		this.gen(r);
+		value = this.constrain(value);
 	}
 
-	public Dimension(String parent, int index, int type) {
-		this.parent = parent;
-		location = parent + "[" + index + type + "]";
-	}
-
-	public String getLoc() {
-		return location;
-	}
-
-	public Integer getType() {
-		return type;
-	}
-
-	public String getParent() {
-		return parent;
+	public Dimension(double va) {
+		this.value = va;
 	}
 
 	private double value;
@@ -53,8 +29,8 @@ public abstract class Dimension {
 		value = constrain(v);
 	}
 
-	public void gen(Random r) {
-		// TODO Auto-generated method stub
-		
-	}
+	public abstract Dimension copy();
+
+	public abstract void gen(Random r);
+
 }

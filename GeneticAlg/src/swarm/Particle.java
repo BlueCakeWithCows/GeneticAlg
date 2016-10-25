@@ -1,5 +1,6 @@
 package swarm;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -63,5 +64,24 @@ public class Particle {
 
 	public int getInSize() {
 		return this.inputSize;
+	}
+
+	public String toString() {
+		return score + ": " + layer.getString(this);
+	}
+
+	public DecimalFormat df = new DecimalFormat("#.00");
+
+	public Particle copy() {
+		Particle p = new Particle(inputSize, functions, rand);
+		p.setScore(score);
+		for(String k : map.keySet()){
+			p.map.put(k, this.map.get(k).copy());
+		}
+		return null;
+	}
+
+	private void setScore(double score2) {
+		this.score = score2;
 	}
 }

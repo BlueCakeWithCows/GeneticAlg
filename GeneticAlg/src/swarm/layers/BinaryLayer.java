@@ -28,4 +28,15 @@ public class BinaryLayer extends Layer {
 		} else
 			throw new RuntimeException("Fuck everything. Binary Layer Got a non-binary answer");
 	}
+
+	public String getString(Particle particle) {
+		double dim = particle.get(this.getLocation(), BinaryDimension.class);
+		if (dim == 0) {
+			return terminatingDimension.getString(particle);
+		} else if (dim == 1) {
+			return funcDimension.getString(particle);
+		} else
+			throw new RuntimeException("Fuck everything. Binary Layer Got a non-binary answer");
+
+	}
 }
