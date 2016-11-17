@@ -33,7 +33,11 @@ public class Particle {
 	public void score(TestCase[] cases) {
 		double score = 0;
 		for (TestCase c : cases) {
-			score += Math.abs(c.out[0] - this.solve(c.input));
+			double d = Math.abs(c.out[0] - this.solve(c.input));
+			if (Double.isFinite(d))
+				score += d;
+			else
+				score += 5000;
 		}
 		this.score = score;
 	}
@@ -75,7 +79,7 @@ public class Particle {
 	public Particle copy() {
 		Particle p = new Particle(inputSize, functions, rand);
 		p.setScore(score);
-		for(String k : map.keySet()){
+		for (String k : map.keySet()) {
 			p.map.put(k, this.map.get(k).copy());
 		}
 		return null;
