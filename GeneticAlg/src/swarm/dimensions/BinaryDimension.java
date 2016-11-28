@@ -9,11 +9,21 @@ public class BinaryDimension extends Dimension {
 	public BinaryDimension(double value) {
 		super(value);
 	}
+	
 
 	public BinaryDimension(Random value) {
 		super(value);
 	}
+	public BinaryDimension() {
+		
+	}
 
+	public double getValue() {
+		if(value>1)
+			return 1;
+		else
+			return 0;
+	}
 	public double getMin() {
 		return 0;
 	}

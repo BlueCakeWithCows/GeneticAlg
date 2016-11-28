@@ -13,6 +13,7 @@ public class Particle {
 	private double score;
 
 	public HashMap<String, Dimension> map;
+	public HashMap<String, Double> velocityMap;
 	public BinaryLayer layer;
 	private List<Function> functions;
 	private int inputSize;
@@ -30,9 +31,9 @@ public class Particle {
 		return layer.solve(inputs, this);
 	}
 
-	public void score(TestCase[] cases) {
+	public void score(List<TestCase> data) {
 		double score = 0;
-		for (TestCase c : cases) {
+		for (TestCase c : data) {
 			double d = Math.abs(c.out[0] - this.solve(c.input));
 			if (Double.isFinite(d))
 				score += d;
@@ -47,10 +48,14 @@ public class Particle {
 			Dimension d = null;
 			try {
 				d = class1.newInstance();
+				d.init(rand);
 			} catch (InstantiationException e) {
 				e.printStackTrace();
+				System.out.println(class1);
+				System.exit(0);
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
+				System.exit(0);
 			}
 			d.gen(rand);
 			map.put(location, d);
@@ -87,5 +92,16 @@ public class Particle {
 
 	private void setScore(double score2) {
 		this.score = score2;
+	}
+
+	public double getVelocity(String key ) {
+		if(!map.containsKey(key)){
+			velocityMap.put(key, rand.nextDouble()*2d-1d);
+		}
+		return velocityMap.get(key);
+	}
+	
+	public void setVelocity(String key, double newVelX) {
+		velocityMap.put(key, newVelX);
 	}
 }

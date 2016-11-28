@@ -11,9 +11,14 @@ public abstract class Dimension {
 
 	public Dimension(double va) {
 		this.value = va;
+
 	}
 
-	private double value;
+	public Dimension() {
+
+	}
+
+	protected double value;
 
 	public abstract double getMin();
 
@@ -33,4 +38,8 @@ public abstract class Dimension {
 
 	public abstract void gen(Random r);
 
+	public void init(Random rand) {
+		this.gen(rand);
+		value = this.constrain(value);
+	}
 }

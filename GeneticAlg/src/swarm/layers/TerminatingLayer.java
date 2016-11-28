@@ -17,9 +17,9 @@ public class TerminatingLayer extends Layer {
 	public double solve(double[] inputs, Particle o) {
 		double value = 0;
 		for (int i = 0; i < inputsize; i++) {
-			value += inputs[i] * o.get(location + i, Dimension.class);
+			value += inputs[i] * o.get(location + i, DoubleDimension.class);
 		}
-		value += o.get(location + (inputsize), Dimension.class);
+		value += o.get(location + (inputsize), DoubleDimension.class);
 		return value;
 	}
 
