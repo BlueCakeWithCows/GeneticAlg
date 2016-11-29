@@ -20,6 +20,8 @@ public class Particle {
 
 	public Particle(int inputSize, List<Function> functions, Random random) {
 		map = new HashMap<String, Dimension>(32);
+		velocityMap = new HashMap<String, Double>(32);
+		
 		rand = random;
 		this.inputSize = inputSize;
 		this.functions = functions;
@@ -33,6 +35,7 @@ public class Particle {
 
 	public void score(List<TestCase> data) {
 		double score = 0;
+		this.score=0;
 		for (TestCase c : data) {
 			double d = Math.abs(c.out[0] - this.solve(c.input));
 			if (Double.isFinite(d))
@@ -95,7 +98,7 @@ public class Particle {
 	}
 
 	public double getVelocity(String key ) {
-		if(!map.containsKey(key)){
+		if(!velocityMap.containsKey(key)){
 			velocityMap.put(key, rand.nextDouble()*2d-1d);
 		}
 		return velocityMap.get(key);

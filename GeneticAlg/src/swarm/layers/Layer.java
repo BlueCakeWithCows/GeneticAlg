@@ -1,7 +1,5 @@
 package swarm.layers;
 
-import java.security.acl.Owner;
-
 import swarm.Particle;
 
 public abstract class Layer {

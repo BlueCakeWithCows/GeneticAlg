@@ -48,6 +48,10 @@ public class BinaryDimension extends Dimension {
 	@Override
 	public void gen(Random r) {
 		this.setValue(r.nextFloat() * 2f);
+		if(value <1.5f)
+			value = 0;
+		else
+			value = 1.5;
 	}
 	
 }

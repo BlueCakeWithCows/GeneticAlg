@@ -15,7 +15,7 @@ public class BinaryLayer extends Layer {
 
 	public double solve(double[] inputs, Particle o) {
 		double dim = o.get(this.getLocation(), BinaryDimension.class);
-		System.out.println(this.getLocation());
+	
 		if (dim == 0) {
 			if (terminatingDimension == null)
 				terminatingDimension = new TerminatingLayer(this, o.getInSize());
