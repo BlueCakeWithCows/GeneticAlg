@@ -174,7 +174,7 @@ public abstract class Scorer {
                 res = Double.compare(o.runningScore, this.runningScore);
             }
             if (res == 0) {
-                //res = Integer.compare(this.tree.getSize(), o.tree.getSize());
+                res = Integer.compare(this.tree.getSize(), o.tree.getSize());
             }
             return res;
         }
